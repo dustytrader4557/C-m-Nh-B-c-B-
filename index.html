@@ -1,0 +1,2403 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cơm Nhà Bắc Bộ — Lập Thực Đơn & Đi Chợ Chuẩn Vị</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Be Vietnam Pro"', 'sans-serif'],
+            serif: ['"Playfair Display"', 'serif'],
+          },
+          colors: {
+            cream: {
+              50: '#FDFBF7',
+              100: '#F8F4EC',
+              200: '#EFE7D6',
+              300: '#E2D4B7',
+            },
+            terracotta: {
+              50: '#FDF3F0',
+              100: '#FAE3DC',
+              500: '#C84B31',
+              600: '#B03D25',
+              700: '#8F2F1B',
+            },
+            bamboo: {
+              50: '#F2F7F3',
+              100: '#E0EDE3',
+              600: '#3A6B4C',
+              700: '#2D553C',
+              800: '#21402D',
+            },
+            ink: {
+              800: '#2C2621',
+              600: '#5C5248',
+              400: '#8F8377',
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body {
+      background-color: #FDFBF7;
+      color: #2C2621;
+      -webkit-tap-highlight-color: transparent;
+    }
+    /* Custom subtle scrollbar */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #F8F4EC;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #D5C7AE;
+      border-radius: 9999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #B8A689;
+    }
+    .tray-card {
+      transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+    }
+    .tray-card:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 18px -4px rgba(44, 38, 33, 0.08);
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col font-sans antialiased selection:bg-terracotta-100 selection:text-terracotta-700">
+
+  <!-- TOP HEADER & NAVIGATION -->
+  <header class="sticky top-0 z-30 bg-cream-50/95 backdrop-blur-md border-b border-cream-200 shadow-sm">
+    <div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
+      <div class="flex flex-wrap items-center justify-between gap-3 py-3">
+        <!-- Brand Logo -->
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-2xl bg-terracotta-500 text-white flex items-center justify-center shadow-sm shrink-0">
+            <!-- Steaming Rice Bowl SVG -->
+            <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M4 11h16a1 1 0 0 1 1 1v.5a7.5 7.5 0 0 1-15 0V12a1 1 0 0 1 1-1Z"/>
+              <path d="M8 20h8"/>
+              <path d="M9 7c0-1 .5-1.5 1-2s1-1 1-2"/>
+              <path d="M13 7c0-1 .5-1.5 1-2s1-1 1-2"/>
+              <path d="M3 9l18-3"/>
+            </svg>
+          </div>
+          <div>
+            <h1 class="font-serif text-lg sm:text-xl font-bold text-ink-800 leading-tight">Cơm Nhà Bắc Bộ</h1>
+            <p class="text-xs text-ink-600 hidden sm:block">Mâm cơm chuẩn vị • Gợi ý thông minh • Đi chợ gọn gàng</p>
+          </div>
+        </div>
+
+        <!-- Global Controls: Servings & Backup -->
+        <div class="flex items-center gap-2 sm:gap-3">
+          <!-- Household Servings Selector -->
+          <div class="flex items-center bg-cream-100 border border-cream-200 rounded-xl px-2.5 py-1.5">
+            <span class="text-xs font-medium text-ink-600 mr-1.5 hidden md:inline">Khẩu phần:</span>
+            <svg class="w-4 h-4 text-bamboo-600 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/>
+            </svg>
+            <select id="servingsSelect" onchange="updateServings(this.value)" class="bg-transparent text-xs sm:text-sm font-semibold text-ink-800 focus:outline-none cursor-pointer">
+              <option value="2">2 người ăn</option>
+              <option value="3">3 người ăn</option>
+              <option value="4" selected>4 người ăn</option>
+              <option value="5">5 người ăn</option>
+              <option value="6">6 người ăn</option>
+            </select>
+          </div>
+
+          <!-- Backup / Data Button -->
+          <button onclick="openBackupModal()" title="Sao lưu & Khôi phục dữ liệu" class="p-2 sm:px-3 sm:py-2 rounded-xl bg-cream-100 hover:bg-cream-200 border border-cream-200 text-ink-800 text-xs font-medium flex items-center gap-1.5 transition">
+            <svg class="w-4 h-4 text-ink-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4"/>
+            </svg>
+            <span class="hidden sm:inline">Sao lưu</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Navigation Tabs -->
+      <nav class="flex gap-1 sm:gap-2 overflow-x-auto pb-2.5 pt-0.5 no-scrollbar" aria-label="Tabs">
+        <button onclick="switchTab('planner')" id="tab-planner" class="tab-btn flex-1 sm:flex-none flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-xs sm:text-sm font-semibold transition whitespace-nowrap bg-terracotta-500 text-white shadow-sm">
+          <span>📅</span>
+          <span>Thực Đơn Tuần</span>
+        </button>
+        <button onclick="switchTab('recipes')" id="tab-recipes" class="tab-btn flex-1 sm:flex-none flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-xs sm:text-sm font-semibold transition whitespace-nowrap bg-cream-100 text-ink-600 hover:bg-cream-200">
+          <span>🍲</span>
+          <span>Kho Món Bắc (<span id="recipeCountBadge">32</span>)</span>
+        </button>
+        <button onclick="switchTab('grocery')" id="tab-grocery" class="tab-btn flex-1 sm:flex-none flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-xs sm:text-sm font-semibold transition whitespace-nowrap bg-cream-100 text-ink-600 hover:bg-cream-200">
+          <span>🧺</span>
+          <span>Danh Sách Đi Chợ</span>
+          <span id="groceryCountBadge" class="ml-0.5 px-1.5 py-0.2 rounded-full text-[11px] bg-bamboo-600 text-white">0</span>
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <!-- MAIN CONTENT AREA -->
+  <main class="flex-1 max-w-7xl w-full mx-auto px-3 sm:px-6 lg:px-8 py-5">
+
+    <!-- ==================== VIEW 1: WEEKLY MEAL PLANNER ==================== -->
+    <section id="view-planner" class="space-y-5">
+      <!-- Planner Action Bar -->
+      <div class="bg-white rounded-2xl p-4 border border-cream-200 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div>
+          <h2 class="font-serif text-lg sm:text-xl font-bold text-ink-800">Lịch Mâm Cơm Cả Tuần</h2>
+          <p class="text-xs sm:text-sm text-ink-600 mt-0.5">Mỗi bữa chính gồm <span class="font-semibold text-terracotta-600">Món mặn</span> + <span class="font-semibold text-bamboo-600">Món canh</span> + <span class="font-semibold text-amber-700">Món rau/phụ</span> cân bằng vị Bắc.</p>
+        </div>
+        <div class="flex flex-wrap items-center gap-2">
+          <button onclick="autoGenerateWeek()" class="px-4 py-2.5 rounded-xl bg-bamboo-600 hover:bg-bamboo-700 text-white text-xs sm:text-sm font-semibold shadow-sm flex items-center gap-2 transition">
+            <span>✨</span>
+            <span>Lập thực đơn cả tuần</span>
+          </button>
+          <button onclick="confirmClearWeek()" class="px-3.5 py-2.5 rounded-xl bg-cream-100 hover:bg-red-50 text-ink-600 hover:text-red-600 border border-cream-200 text-xs sm:text-sm font-medium transition">
+            Xóa tuần
+          </button>
+        </div>
+      </div>
+
+      <!-- Day Filter Pills for Mobile Convenience -->
+      <div class="flex items-center gap-1.5 overflow-x-auto pb-1 lg:hidden">
+        <button onclick="filterPlannerDay('all')" id="day-pill-all" class="day-pill px-3 py-1.5 rounded-lg text-xs font-semibold bg-ink-800 text-white whitespace-nowrap">Cả tuần</button>
+        <button onclick="filterPlannerDay('mon')" id="day-pill-mon" class="day-pill px-3 py-1.5 rounded-lg text-xs font-medium bg-cream-100 text-ink-600 whitespace-nowrap">Thứ 2</button>
+        <button onclick="filterPlannerDay('tue')" id="day-pill-tue" class="day-pill px-3 py-1.5 rounded-lg text-xs font-medium bg-cream-100 text-ink-600 whitespace-nowrap">Thứ 3</button>
+        <button onclick="filterPlannerDay('wed')" id="day-pill-wed" class="day-pill px-3 py-1.5 rounded-lg text-xs font-medium bg-cream-100 text-ink-600 whitespace-nowrap">Thứ 4</button>
+        <button onclick="filterPlannerDay('thu')" id="day-pill-thu" class="day-pill px-3 py-1.5 rounded-lg text-xs font-medium bg-cream-100 text-ink-600 whitespace-nowrap">Thứ 5</button>
+        <button onclick="filterPlannerDay('fri')" id="day-pill-fri" class="day-pill px-3 py-1.5 rounded-lg text-xs font-medium bg-cream-100 text-ink-600 whitespace-nowrap">Thứ 6</button>
+        <button onclick="filterPlannerDay('sat')" id="day-pill-sat" class="day-pill px-3 py-1.5 rounded-lg text-xs font-medium bg-cream-100 text-ink-600 whitespace-nowrap">Thứ 7</button>
+        <button onclick="filterPlannerDay('sun')" id="day-pill-sun" class="day-pill px-3 py-1.5 rounded-lg text-xs font-medium bg-cream-100 text-ink-600 whitespace-nowrap">Chủ Nhật</button>
+      </div>
+
+      <!-- 7-Day Grid Container -->
+      <div id="weeklyGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+        <!-- Rendered dynamically by JS -->
+      </div>
+    </section>
+
+    <!-- ==================== VIEW 2: RECIPE DATABASE & SMART IMPORTER ==================== -->
+    <section id="view-recipes" class="hidden space-y-5">
+      <!-- Top Header & Import CTA -->
+      <div class="bg-white rounded-2xl p-4 sm:p-5 border border-cream-200 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div>
+          <h2 class="font-serif text-lg sm:text-xl font-bold text-ink-800">Kho Công Thức Cơm Nhà Bắc Bộ</h2>
+          <p class="text-xs sm:text-sm text-ink-600 mt-0.5">Nhấn vào từng món để xem cách làm chi tiết hoặc nhập thêm công thức từ Cookpad, Điện Máy XANH...</p>
+        </div>
+        <button onclick="openImportModal()" class="px-4 py-2.5 rounded-xl bg-terracotta-500 hover:bg-terracotta-600 text-white text-xs sm:text-sm font-semibold shadow-sm flex items-center justify-center gap-2 transition shrink-0">
+          <span>➕</span>
+          <span>Thêm món / Nhập từ link</span>
+        </button>
+      </div>
+
+      <!-- Search & Filter Controls -->
+      <div class="bg-white rounded-2xl p-4 border border-cream-200 shadow-sm space-y-3">
+        <div class="flex flex-col sm:flex-row gap-3">
+          <!-- Search input -->
+          <div class="relative flex-1">
+            <svg class="w-4 h-4 text-ink-400 absolute left-3.5 top-1/2 -translate-y-1/2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+            </svg>
+            <input type="text" id="recipeSearchInput" oninput="renderRecipesView()" placeholder="Tìm tên món hoặc nguyên liệu (vd: thịt kho, sấu, cá trắm, rau muống)..." class="w-full pl-10 pr-4 py-2.5 rounded-xl bg-cream-50 border border-cream-200 text-sm focus:outline-none focus:border-terracotta-500">
+          </div>
+          <!-- Protein Filter -->
+          <select id="recipeProteinFilter" onchange="renderRecipesView()" class="px-3.5 py-2.5 rounded-xl bg-cream-50 border border-cream-200 text-sm font-medium text-ink-800 focus:outline-none focus:border-terracotta-500">
+            <option value="all">Tất cả nguyên liệu chính</option>
+            <option value="lon">🥩 Thịt lợn</option>
+            <option value="ga">🍗 Thịt gà / vịt</option>
+            <option value="bo">🥩 Thịt bò</option>
+            <option value="ca_haisan">🐟 Cá & Hải sản</option>
+            <option value="trung_dau">🥚 Trứng & Đậu phụ</option>
+            <option value="chay">🥬 Rau củ / Thanh đạm</option>
+          </select>
+        </div>
+
+        <!-- Category Filter Chips -->
+        <div class="flex flex-wrap gap-2">
+          <button onclick="setRecipeCategoryFilter('all')" id="cat-filter-all" class="cat-filter-btn px-3.5 py-1.5 rounded-xl text-xs font-semibold bg-ink-800 text-white transition">Tất cả món</button>
+          <button onclick="setRecipeCategoryFilter('sang')" id="cat-filter-sang" class="cat-filter-btn px-3.5 py-1.5 rounded-xl text-xs font-medium bg-cream-100 text-ink-600 hover:bg-cream-200 transition">🍜 Bữa sáng</button>
+          <button onclick="setRecipeCategoryFilter('man')" id="cat-filter-man" class="cat-filter-btn px-3.5 py-1.5 rounded-xl text-xs font-medium bg-cream-100 text-ink-600 hover:bg-cream-200 transition">🍖 Món mặn</button>
+          <button onclick="setRecipeCategoryFilter('canh')" id="cat-filter-canh" class="cat-filter-btn px-3.5 py-1.5 rounded-xl text-xs font-medium bg-cream-100 text-ink-600 hover:bg-cream-200 transition">🥣 Món canh</button>
+          <button onclick="setRecipeCategoryFilter('rau')" id="cat-filter-rau" class="cat-filter-btn px-3.5 py-1.5 rounded-xl text-xs font-medium bg-cream-100 text-ink-600 hover:bg-cream-200 transition">🥬 Món rau / phụ</button>
+        </div>
+      </div>
+
+      <!-- Recipe Cards Grid -->
+      <div id="recipesGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <!-- Rendered dynamically by JS -->
+      </div>
+    </section>
+
+    <!-- ==================== VIEW 3: GROCERY SHOPPING LIST ==================== -->
+    <section id="view-grocery" class="hidden space-y-5">
+      <!-- Grocery Control Header -->
+      <div class="bg-white rounded-2xl p-4 sm:p-5 border border-cream-200 shadow-sm space-y-4">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div>
+            <h2 class="font-serif text-lg sm:text-xl font-bold text-ink-800">Danh Sách Đi Chợ Thông Minh</h2>
+            <p class="text-xs sm:text-sm text-ink-600 mt-0.5">Tự động gộp nguyên liệu trùng và tính định lượng cho <span id="groceryServingsLabel" class="font-bold text-terracotta-600">4 người ăn</span>.</p>
+          </div>
+          <div class="flex flex-wrap items-center gap-2">
+            <button onclick="copyGroceryToClipboard()" class="px-4 py-2.5 rounded-xl bg-bamboo-600 hover:bg-bamboo-700 text-white text-xs sm:text-sm font-semibold shadow-sm flex items-center gap-2 transition">
+              <span>📋</span>
+              <span>Sao chép gửi Zalo / Ghi chú</span>
+            </button>
+            <button onclick="resetCheckedGroceries()" class="px-3.5 py-2.5 rounded-xl bg-cream-100 hover:bg-cream-200 border border-cream-200 text-ink-700 text-xs sm:text-sm font-medium transition">
+              Bỏ đánh dấu tất cả
+            </button>
+          </div>
+        </div>
+
+        <!-- Day Range & Pantry Filters -->
+        <div class="pt-3 border-t border-cream-200 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div class="flex flex-wrap items-center gap-2">
+            <span class="text-xs font-semibold text-ink-600">Phạm vi đi chợ:</span>
+            <select id="groceryRangeSelect" onchange="renderGroceryView()" class="px-3 py-1.5 rounded-xl bg-cream-50 border border-cream-200 text-xs sm:text-sm font-semibold text-ink-800 focus:outline-none">
+              <option value="all">Cả tuần (Thứ 2 – Chủ Nhật)</option>
+              <option value="first_half">Đầu tuần (Thứ 2 – Thứ 4)</option>
+              <option value="second_half">Cuối tuần (Thứ 5 – Chủ Nhật)</option>
+            </select>
+          </div>
+
+          <label class="inline-flex items-center gap-2 cursor-pointer select-none bg-cream-50 px-3 py-1.5 rounded-xl border border-cream-200">
+            <input type="checkbox" id="hidePantryStaples" onchange="renderGroceryView()" class="w-4 h-4 rounded text-bamboo-600 focus:ring-bamboo-600">
+            <span class="text-xs sm:text-sm font-medium text-ink-800">Ẩn gia vị cơ bản có sẵn (muối, mắm, dầu ăn, tiêu...)</span>
+          </label>
+        </div>
+      </div>
+
+      <!-- Grocery Stalls Grid -->
+      <div id="groceryStallsGrid" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <!-- Rendered dynamically by JS -->
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ==================== MODAL 1: MÂM CƠM SLOT EDITOR & SMART PAIRING ==================== -->
+  <div id="mealEditorModal" class="fixed inset-0 z-50 hidden bg-ink-800/50 backdrop-blur-xs flex items-center justify-center p-3 sm:p-4 overflow-y-auto">
+    <div class="bg-cream-50 rounded-2xl max-w-2xl w-full border border-cream-200 shadow-2xl overflow-hidden my-auto">
+      <!-- Modal Header -->
+      <div class="bg-white px-5 py-4 border-b border-cream-200 flex items-center justify-between">
+        <div>
+          <span id="editorDayBadge" class="inline-block px-2.5 py-0.5 rounded-md text-xs font-semibold bg-terracotta-100 text-terracotta-700 mb-1">Thứ Hai • Bữa Trưa</span>
+          <h3 class="font-serif text-lg font-bold text-ink-800">Soạn Mâm Cơm Chuẩn Vị</h3>
+        </div>
+        <button onclick="closeMealEditor()" class="p-2 rounded-xl hover:bg-cream-100 text-ink-600">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+        </button>
+      </div>
+
+      <!-- Modal Body -->
+      <div class="p-5 space-y-4 max-h-[75vh] overflow-y-auto">
+        <!-- Smart Pairing Banner & Auto-Complete -->
+        <div id="smartPairingBox" class="bg-bamboo-50 border border-bamboo-100 rounded-xl p-3.5 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div class="space-y-1">
+            <div class="flex items-center gap-1.5 text-xs font-bold text-bamboo-700 uppercase tracking-wide">
+              <span>🌿</span>
+              <span>Gợi ý kết hợp mâm cơm Bắc</span>
+            </div>
+            <p id="pairingAdviceText" class="text-xs sm:text-sm text-ink-800 leading-relaxed">
+              Chọn một món chính hoặc nhấn nút bên cạnh để tự động phối mâm cơm hài hòa âm dương, không trùng nguyên liệu.
+            </p>
+          </div>
+          <button onclick="smartCompleteCurrentTray()" class="px-3.5 py-2 rounded-xl bg-bamboo-600 hover:bg-bamboo-700 text-white text-xs font-semibold whitespace-nowrap shadow-xs transition shrink-0">
+            ✨ Gợi ý mâm cơm chuẩn vị
+          </button>
+        </div>
+
+        <!-- Warning Banner (if duplicate protein or heavy combo detected) -->
+        <div id="pairingWarningBox" class="hidden bg-amber-50 border border-amber-200 text-amber-900 rounded-xl p-3 text-xs flex items-start gap-2">
+          <span class="text-base leading-none">⚠️</span>
+          <span id="pairingWarningText"></span>
+        </div>
+
+        <!-- Slot Selectors Container (Dynamic: 1 slot for Sang, 3 slots for Trua/Toi) -->
+        <div id="editorSlotsContainer" class="space-y-4">
+          <!-- Populated dynamically -->
+        </div>
+
+        <!-- Copy / Leftover Feature -->
+        <div class="pt-3 border-t border-cream-200 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+          <span class="text-xs text-ink-600 font-medium">Nấu dư cho bữa sau (Ăn tiếp / Đồ thừa):</span>
+          <div class="flex items-center gap-2">
+            <select id="copyTargetSelect" class="px-2.5 py-1.5 rounded-lg bg-white border border-cream-200 text-xs text-ink-800">
+              <!-- Populated dynamically -->
+            </select>
+            <button onclick="copyCurrentMealToTarget()" class="px-3 py-1.5 rounded-lg bg-cream-200 hover:bg-cream-300 text-ink-800 text-xs font-semibold transition">
+              Sao chép sang
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Modal Footer -->
+      <div class="bg-white px-5 py-3.5 border-t border-cream-200 flex items-center justify-between gap-3">
+        <button onclick="clearCurrentMealSlot()" class="px-3.5 py-2 rounded-xl text-xs font-semibold text-red-600 hover:bg-red-50 transition">
+          Xóa bữa này
+        </button>
+        <div class="flex items-center gap-2">
+          <button onclick="closeMealEditor()" class="px-4 py-2 rounded-xl bg-cream-100 hover:bg-cream-200 text-ink-700 text-xs sm:text-sm font-semibold transition">
+            Hủy
+          </button>
+          <button onclick="saveMealEditor()" class="px-5 py-2 rounded-xl bg-terracotta-500 hover:bg-terracotta-600 text-white text-xs sm:text-sm font-semibold shadow-sm transition">
+            Lưu mâm cơm
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== MODAL 2: RECIPE DETAIL VIEWER ==================== -->
+  <div id="recipeDetailModal" class="fixed inset-0 z-50 hidden bg-ink-800/50 backdrop-blur-xs flex items-center justify-center p-3 sm:p-4 overflow-y-auto">
+    <div class="bg-white rounded-2xl max-w-2xl w-full border border-cream-200 shadow-2xl overflow-hidden my-auto">
+      <div class="bg-cream-100 px-5 py-4 border-b border-cream-200 flex items-start justify-between gap-3">
+        <div>
+          <div class="flex flex-wrap items-center gap-1.5 mb-1.5" id="detailBadges"></div>
+          <h3 id="detailTitle" class="font-serif text-xl sm:text-2xl font-bold text-ink-800">Tên món ăn</h3>
+        </div>
+        <button onclick="closeRecipeDetail()" class="p-2 rounded-xl bg-white/80 hover:bg-white text-ink-600">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+        </button>
+      </div>
+
+      <div class="p-5 space-y-5 max-h-[75vh] overflow-y-auto">
+        <!-- Source URL if imported -->
+        <div id="detailSourceBox" class="hidden text-xs bg-cream-50 px-3 py-2 rounded-xl border border-cream-200 text-ink-600 flex items-center justify-between">
+          <span>Nguồn công thức đã lưu:</span>
+          <a id="detailSourceLink" href="#" target="_blank" rel="noopener noreferrer" class="text-terracotta-600 font-semibold underline truncate max-w-xs">Xem bài gốc</a>
+        </div>
+
+        <!-- Ingredients scaled by servings -->
+        <div>
+          <div class="flex items-center justify-between mb-2.5">
+            <h4 class="font-bold text-sm uppercase tracking-wider text-terracotta-700">Nguyên liệu chuẩn bị</h4>
+            <span id="detailServingsBadge" class="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-cream-100 text-ink-700">Cho 4 người ăn</span>
+          </div>
+          <ul id="detailIngredientsList" class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+            <!-- Populated dynamically -->
+          </ul>
+        </div>
+
+        <!-- Step-by-step Instructions -->
+        <div>
+          <h4 class="font-bold text-sm uppercase tracking-wider text-bamboo-700 mb-2.5">Các bước chế biến chuẩn vị</h4>
+          <ol id="detailInstructionsList" class="space-y-2.5">
+            <!-- Populated dynamically -->
+          </ol>
+        </div>
+      </div>
+
+      <div class="bg-cream-50 px-5 py-3.5 border-t border-cream-200 flex items-center justify-between">
+        <button id="deleteCustomRecipeBtn" onclick="deleteCurrentCustomRecipe()" class="hidden px-3.5 py-2 rounded-xl text-xs font-semibold text-red-600 hover:bg-red-50">
+          Xóa món tự thêm
+        </button>
+        <button onclick="closeRecipeDetail()" class="ml-auto px-5 py-2 rounded-xl bg-ink-800 text-white text-xs sm:text-sm font-semibold">
+          Đóng lại
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== MODAL 3: SMART RECIPE PASTE / URL IMPORTER ==================== -->
+  <div id="importRecipeModal" class="fixed inset-0 z-50 hidden bg-ink-800/50 backdrop-blur-xs flex items-center justify-center p-3 sm:p-4 overflow-y-auto">
+    <div class="bg-cream-50 rounded-2xl max-w-2xl w-full border border-cream-200 shadow-2xl overflow-hidden my-auto">
+      <div class="bg-white px-5 py-4 border-b border-cream-200 flex items-center justify-between">
+        <div>
+          <h3 class="font-serif text-lg sm:text-xl font-bold text-ink-800">Thêm Món Mới / Nhập Từ Link Web</h3>
+          <p class="text-xs text-ink-600">Dán link & nội dung từ Cookpad, Điện Máy XANH, Bách Hóa Xanh để tách nguyên liệu tự động</p>
+        </div>
+        <button onclick="closeImportModal()" class="p-2 rounded-xl hover:bg-cream-100 text-ink-600">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+        </button>
+      </div>
+
+      <div class="p-5 space-y-4 max-h-[78vh] overflow-y-auto">
+        <!-- Smart Paste Area -->
+        <div class="bg-white p-4 rounded-xl border border-cream-200 space-y-3">
+          <div class="flex flex-wrap items-center justify-between gap-2">
+            <label class="text-xs font-bold uppercase tracking-wide text-terracotta-700">1. Dán nhanh từ trang công thức (Tùy chọn)</label>
+            <button type="button" onclick="fillSampleWebPaste()" class="text-xs font-semibold text-bamboo-700 bg-bamboo-50 hover:bg-bamboo-100 px-2.5 py-1 rounded-lg border border-bamboo-200 transition">
+              📋 Thử dữ liệu mẫu từ web
+            </button>
+          </div>
+          <input type="url" id="importUrlInput" placeholder="Dán đường dẫn bài viết (vd: https://cookpad.com/vn/cong-thuc/...)" class="w-full px-3.5 py-2 rounded-xl bg-cream-50 border border-cream-200 text-xs sm:text-sm focus:outline-none focus:border-terracotta-500">
+          <textarea id="importRawText" rows="4" placeholder="Dán đoạn văn bản nguyên liệu & cách làm copy từ web vào đây (mỗi nguyên liệu một dòng, vd: 300g thịt ba chỉ, 2 quả cà chua, 1 mớ hành lá)..." class="w-full px-3.5 py-2 rounded-xl bg-cream-50 border border-cream-200 text-xs sm:text-sm focus:outline-none focus:border-terracotta-500"></textarea>
+          <button type="button" onclick="parsePastedRecipeText()" class="w-full py-2 rounded-xl bg-bamboo-600 hover:bg-bamboo-700 text-white text-xs sm:text-sm font-semibold transition">
+            ⚡ Phân tích & Tách nguyên liệu tự động
+          </button>
+        </div>
+
+        <!-- Structured Form Fields -->
+        <div class="bg-white p-4 rounded-xl border border-cream-200 space-y-3">
+          <label class="text-xs font-bold uppercase tracking-wide text-ink-800 block">2. Kiểm tra & Chỉnh sửa thông tin món ăn (cho 4 người ăn)</label>
+          
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div class="sm:col-span-2">
+              <label class="block text-xs font-semibold text-ink-600 mb-1">Tên món ăn *</label>
+              <input type="text" id="newRecipeName" placeholder="Ví dụ: Cá bống kho tiêu" class="w-full px-3.5 py-2 rounded-xl bg-cream-50 border border-cream-200 text-sm focus:outline-none focus:border-terracotta-500">
+            </div>
+
+            <div>
+              <label class="block text-xs font-semibold text-ink-600 mb-1">Phân loại mâm cơm *</label>
+              <select id="newRecipeCategory" class="w-full px-3 py-2 rounded-xl bg-cream-50 border border-cream-200 text-sm">
+                <option value="man">🍖 Món mặn</option>
+                <option value="canh">🥣 Món canh</option>
+                <option value="rau">🥬 Món rau / phụ</option>
+                <option value="sang">🍜 Bữa sáng</option>
+              </select>
+            </div>
+
+            <div>
+              <label class="block text-xs font-semibold text-ink-600 mb-1">Nguyên liệu chính *</label>
+              <select id="newRecipeProtein" class="w-full px-3 py-2 rounded-xl bg-cream-50 border border-cream-200 text-sm">
+                <option value="lon">Thịt lợn</option>
+                <option value="ga">Thịt gà / vịt</option>
+                <option value="bo">Thịt bò</option>
+                <option value="ca_haisan">Cá & Hải sản</option>
+                <option value="trung_dau">Trứng & Đậu phụ</option>
+                <option value="chay">Rau củ / Thanh đạm</option>
+              </select>
+            </div>
+
+            <div>
+              <label class="block text-xs font-semibold text-ink-600 mb-1">Hương vị đặc trưng</label>
+              <select id="newRecipeFlavor" class="w-full px-3 py-2 rounded-xl bg-cream-50 border border-cream-200 text-sm">
+                <option value="dam_da">Đậm đà / Kho rim</option>
+                <option value="thanh_mat">Thanh mát / Luộc hấp</option>
+                <option value="chua_nhe">Chua nhẹ / Giải ngấy</option>
+                <option value="gion_thom">Giòn thơm / Chiên xào</option>
+              </select>
+            </div>
+
+            <div>
+              <label class="block text-xs font-semibold text-ink-600 mb-1">Thời gian nấu (phút)</label>
+              <input type="number" id="newRecipeTime" value="30" min="5" max="240" class="w-full px-3.5 py-2 rounded-xl bg-cream-50 border border-cream-200 text-sm">
+            </div>
+          </div>
+
+          <!-- Dynamic Ingredient Rows -->
+          <div class="pt-2">
+            <div class="flex items-center justify-between mb-1.5">
+              <label class="text-xs font-semibold text-ink-600">Danh sách nguyên liệu (Gian hàng đi chợ)</label>
+              <button type="button" onclick="addIngredientRow()" class="text-xs font-semibold text-terracotta-600 hover:underline">+ Thêm dòng</button>
+            </div>
+            <div id="newIngredientsContainer" class="space-y-2">
+              <!-- Populated dynamically -->
+            </div>
+          </div>
+
+          <!-- Instructions -->
+          <div class="pt-2">
+            <label class="block text-xs font-semibold text-ink-600 mb-1">Các bước thực hiện (Mỗi bước 1 dòng)</label>
+            <textarea id="newRecipeInstructions" rows="3" placeholder="Bước 1: Sơ chế nguyên liệu...&#10;Bước 2: Ướp gia vị 15 phút...&#10;Bước 3: Kho lửa nhỏ đến khi sánh lại." class="w-full px-3.5 py-2 rounded-xl bg-cream-50 border border-cream-200 text-xs sm:text-sm focus:outline-none focus:border-terracotta-500"></textarea>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-white px-5 py-3.5 border-t border-cream-200 flex items-center justify-end gap-2">
+        <button onclick="closeImportModal()" class="px-4 py-2 rounded-xl bg-cream-100 text-ink-700 text-xs sm:text-sm font-semibold">Hủy</button>
+        <button onclick="saveNewRecipe()" class="px-5 py-2 rounded-xl bg-terracotta-500 hover:bg-terracotta-600 text-white text-xs sm:text-sm font-semibold shadow-sm">Lưu vào Kho Món Bắc</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== MODAL 4: JSON BACKUP & RESTORE ==================== -->
+  <div id="backupModal" class="fixed inset-0 z-50 hidden bg-ink-800/50 backdrop-blur-xs flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl max-w-md w-full border border-cream-200 shadow-2xl overflow-hidden">
+      <div class="px-5 py-4 border-b border-cream-200 flex items-center justify-between">
+        <h3 class="font-serif text-lg font-bold text-ink-800">Sao Lưu & Khôi Phục Dữ Liệu</h3>
+        <button onclick="closeBackupModal()" class="p-1.5 rounded-xl hover:bg-cream-100 text-ink-600">✕</button>
+      </div>
+      <div class="p-5 space-y-4 text-sm text-ink-600">
+        <p>Toàn bộ thực đơn tuần, món ăn tự thêm và danh sách đi chợ được lưu tự động trên trình duyệt này. Bạn có thể tải file sao lưu <code class="bg-cream-100 px-1.5 py-0.5 rounded text-xs font-mono">.json</code> để chuyển sang điện thoại hoặc máy tính khác.</p>
+        
+        <div class="space-y-2.5">
+          <button onclick="exportBackupJSON()" class="w-full py-2.5 px-4 rounded-xl bg-bamboo-600 hover:bg-bamboo-700 text-white font-semibold flex items-center justify-center gap-2 transition">
+            <span>⬇️</span>
+            <span>Tải về file sao lưu (.JSON)</span>
+          </button>
+
+          <label class="w-full py-2.5 px-4 rounded-xl bg-cream-100 hover:bg-cream-200 border border-cream-300 text-ink-800 font-semibold flex items-center justify-center gap-2 cursor-pointer transition">
+            <span>⬆️</span>
+            <span>Khôi phục từ file (.JSON)</span>
+            <input type="file" accept=".json" onchange="importBackupJSON(event)" class="hidden">
+          </label>
+        </div>
+
+        <div class="pt-3 border-t border-cream-200">
+          <button onclick="factoryResetApp()" class="text-xs text-red-600 hover:underline font-medium">Khôi phục cài đặt gốc (Xóa toàn bộ dữ liệu tùy chỉnh)</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOAST NOTIFICATION -->
+  <div id="toastNotification" class="fixed bottom-5 right-5 z-50 transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none">
+    <div class="bg-ink-800 text-white px-4 py-3 rounded-xl shadow-lg flex items-center gap-2.5 text-xs sm:text-sm font-medium">
+      <span id="toastIcon">✅</span>
+      <span id="toastMessage">Đã lưu thay đổi!</span>
+    </div>
+  </div>
+
+  <!-- ==================== JAVASCRIPT APPLICATION LOGIC ==================== -->
+  <script>
+    // =========================================================================
+    // 1. AUTHENTIC NORTHERN VIETNAMESE (MÓN BẮC) STARTER DATABASE (32 DISHES)
+    // Base quantities calibrated for 4 people (4 khẩu phần)
+    // =========================================================================
+    const STARTER_RECIPES = [
+      // --- BỮA SÁNG (6 món) ---
+      {
+        id: 'sang_pho_bo',
+        name: 'Phở bò tái chín Hà Nội',
+        category: 'sang',
+        protein: 'bo',
+        flavorProfile: 'thanh_mat',
+        prepTime: 45,
+        ingredients: [
+          { name: 'Bánh phở tươi', amount: 600, unit: 'g', marketGroup: 'rau_cu' },
+          { name: 'Thịt thăn bò', amount: 250, unit: 'g', marketGroup: 'thit_haisan' },
+          { name: 'Nạm bò chín', amount: 200, unit: 'g', marketGroup: 'thit_haisan' },
+          { name: 'Xương ống bò', amount: 500, unit: 'g', marketGroup: 'thit_haisan' },
+          { name: 'Hành tây, gừng, hành lá, rau mùi', amount: 150, unit: 'g', marketGroup: 'rau_cu' },
+          { name: 'Thảo quả, hoa hồi, quế chi', amount: 1, unit: 'gói', marketGroup: 'gia_vi' },
+          { name: 'Nước mắm ngon', amount: 2, unit: 'thìa', marketGroup: 'gia_vi' }
+        ],
+        instructions: [
+          'Nướng thơm gừng, hành tây và rang sơ thảo quả, hoa hồi, quế chi cho dậy mùi.',
+          'Chần sơ xương ống bò rồi ninh với nước sạch trong 40 phút (hoặc dùng nồi áp suất 20 phút), hớt bọt kỹ để nước dùng trong.',
+          'Thái mỏng thịt thăn bò và nạm bò. Chần bánh phở qua nước sôi, xếp thịt lên trên, rắc hành lá chẻ và chan nước dùng đang sôi sùng sục.'
+        ]
+      },
+      {
+        id: 'sang_bun_thang',
+        name: 'Bún thang Hà Nội',
+        category: 'sang',
+        protein: 'ga',
+        flavorProfile: 'thanh_mat',
+        prepTime: 40,
+        ingredients: [
+          { name: 'Bún rối sợi nhỏ', amount: 600, unit: 'g', marketGroup: 'rau_cu' },
+          { name: 'Ức gà ta luộc xé phay', amount: 250, unit: 'g', marketGroup: 'thit_haisan' },
+          { name: 'Giò lụa thái chỉ', amount: 150, unit: 'g', marketGroup: 'thit_haisan' },
+          { name: 'Trứng gà', amount: 2, unit: 'quả', marketGroup: 'trung_dau' },
+          { name: 'Tôm khô nõn', amount: 30, unit: 'g', marketGroup: 'thit_haisan' },
+          { name: 'Nấm hương khô, hành lá, rau răm', amount: 50, unit: 'g', marketGroup: 'rau_cu' },
+          { name: 'Mắm tôm (tùy chọn)', amount: 1, unit: 'thìa', marketGroup: 'gia_vi' }
+        ],
+        instructions: [
+          'Ninh xương gà cùng tôm khô và nấm hương lấy nước dùng ngọt thanh.',
+          'Đánh tan trứng gà, tráng thật mỏng trên chảo chống dính rồi thái chỉ nhỏ.',
+          'Xếp bún vào bát, bày thịt gà xé, giò lụa thái chỉ, trứng thái chỉ và nấm hương lên mặt bát thật đẹp mắt, chan nước dùng nóng hổi.'
+        ]
+      },
+      {
+        id: 'sang_xoi_xeo',
+        name: 'Xôi xéo hành phi mỡ gà',
+        category: 'sang',
+        protein: 'chay',
+        flavorProfile: 'beo_ngay',
+        prepTime: 35,
+        ingredients: [
+          { name: 'Gạo nếp cái hoa vàng', amount: 500, unit: 'g', marketGroup: 'gia_vi' },
+          { name: 'Đậu xanh xát vỏ', amount: 200, unit: 'g', marketGroup: 'gia_vi' },
+          { name: 'Hành khô thái lát', amount: 100, unit: 'g', marketGroup: 'rau_cu' },
+          { name: 'Mỡ gà hoặc dầu ăn', amount: 4, unit: 'thìa', marketGroup: 'gia_vi' },
+          { name: 'Bột nghệ', amount: 1, unit: 'thìa', marketGroup: 'gia_vi' },
+          { name: 'Ruốc thịt lợn', amount: 80, unit: 'g', marketGroup: 'thit_haisan' }
+        ],
+        instructions: [
+          'Ngâm gạo nếp với chút bột nghệ cho vàng đẹp, đồ chín dẻo thành hai lần lửa.',
+          'Đậu xanh hấp chín mềm, giã nhuyễn rồi nắm chặt thành nắm tròn.',
+          'Phi vàng giòn hành khô. Khi ăn xới xôi ra bát, thái lát mỏng đậu xanh phủ lên, rưới mỡ gà và rắc hành phi, ruốc bông.'
+        ]
+      },
+      {
+        id: 'sang_banh_cuon',
+        name: 'Bánh cuốn nóng chả quế',
+        category: 'sang',
+        protein: 'lon',
+        flavorProfile: 'thanh_mat',
+        prepTime: 25,
+        ingredients: [
+          { name: 'Bánh cuốn mỏng tráng sẵn', amount: 600, unit: 'g', marketGroup: 'rau_cu' },
+          { name: 'Thịt nạc vai băm', amount: 200, unit: 'g', marketGroup: 'thit_haisan' },
+          { name: 'Chả quế ngon', amount: 200, unit: 'g', marketGroup: 'thit_haisan' },
+          { name: 'Mộc nhĩ khô, hành khô', amount: 50, unit: 'g', marketGroup: 'rau_cu' },
+          { name: 'Rau mùi, kinh giới, giá đỗ', amount: 150, unit: 'g', marketGroup: 'rau_cu' },
+          { name: 'Nước mắm, giấm tỏi ớt', amount: 3, unit: 'thìa', marketGroup: 'gia_vi' }
+        ],
+        instructions: [
+          'Xào thơm thịt băm với mộc nhĩ thái nhỏ và hành khô phi.',
+          'Trải bánh cuốn, cho nhân thịt mộc nhĩ vào cuốn tròn, hấp nóng lại trong 3 phút.',
+          'Pha nước chấm chua ngọt ấm nóng, ăn kèm chả quế thái miếng, hành phi và rau thơm.'
+        ]
+      },
+      {
+        id: 'sang_chao_suon',
+        name: 'Cháo sườn sụn quẩy giòn',
+        category: 'sang',
+        protein: 'lon',
+        flavorProfile: 'thanh_mat',
+        prepTime: 40,
+        ingredients: [
+          { name: 'Sườn sụn non', amount: 400, unit: 'g', marketGroup: 'thit_haisan' },
+          { name: 'Bột gạo tẻ mịn (hoặc gạo tẻ xay)', amount: 250, unit: 'g', marketGroup: 'gia_vi' },
+          { name: 'Quẩy giòn', amount: 4, unit: 'cái', marketGroup: 'gia_vi' },
+          { name: 'Ruốc thịt, hành phi', amount: 60, unit: 'g', marketGroup: 'thit_haisan' },
+          { name: 'Hạt tiêu xay, bột ớt', amount: 1, unit: 'thìa', marketGroup: 'gia_vi' }
+        ],
+        instructions: [
+          'Sườn sụn rửa sạch, luộc sơ rồi ninh mềm với 1.5 lít nước và chút muối.',
+          'Hòa tan bột gạo tẻ với nước lạnh cho khỏi vón cục, đổ từ từ vào nồi nước ninh sườn, khuấy đều tay trên lửa nhỏ đến khi cháo sánh mịn.',
+          'Múc cháo ra bát, rắc ruốc, hành phi, hạt tiêu và cắt nhỏ quẩy giòn ăn kèm.'
+        ]
+      },
+      {
+        id: 'sang_mien_luon',
+        name: 'Miến lươn đồng Hà Nội',
+        category: 'sang',
+        protein: 'ca_haisan',
+        flavorProfile: 'gion_thom',
+        prepTime: 35,
+        ingredients: [
+          { name: 'Lươn đồng làm sạch', amount: 350, unit: 'g', marketGroup: 'thit_haisan' },
+          { name: 'Miến dong truyền thống', amount: 250, unit: 'g', marketGroup: 'gia_vi' },
+          { name: 'Xương ống lợn ninh nước dùng', amount: 400, unit: 'g', marketGroup: 'thit_haisan' },
+          { name: 'Hành răm, giá đỗ, hành phi', amount: 150, unit: 'g', marketGroup: 'rau_cu' },
+          { name: 'Bột năng / bột chiên giòn', amount: 50, unit: 'g', marketGroup: 'gia_vi' }
+        ],
+        instructions: [
+          'Lươn lọc xương, phần xương cho vào ninh cùng xương lợn làm nước dùng ngọt thanh. Thịt lươn thái miếng, tẩm bột chiên vàng giòn.',
+          'Miến dong ngâm mềm, chần qua nước sôi cho vào bát cùng giá đỗ, hành răm thái nhỏ.',
+          'Xếp lươn giòn lên trên, rắc hành phi và chan nước dùng nóng hổi.'
+        ]
+      },
+
+      // --- MÓN MẶN (10 món) ---
+      {
+        id: 'man_thit_kho_tau',
+        name: 'Thịt kho tàu trứng cút',
+        category: 'man',
+        protein: 'lon',
+        flavorProfile: 'dam_da',
+        prepTime: 50,
+        ingredients: [
+          { name: 'Thịt ba chỉ ngon', amount: 500, unit: 'g', marketGroup: 'thit_haisan' },
+          { name: 'Trứng cút', amount: 15, unit: 'quả', marketGroup: 'trung_dau' },
+          { name: 'Nước dừa tươi', amount: 300, unit: 'ml', marketGroup: 'rau_cu' },
+          { name: 'Hành khô, tỏi băm', amount: 30, unit: 'g', marketGroup: 'rau_cu' },
+          { name: 'Nước mắm, đường thắng nước hàng, hạt tiêu', amount: 3, unit: 'thìa', marketGroup: 'gia_vi' }
+        ],
+        instructions: [
+          'Thịt ba chỉ thái miếng vuông vừa ăn, chần sơ nước sôi rồi ướp với hành tỏi băm, nước mắm, nước hàng và chút tiêu trong 20 phút.',
+          'Trứng cút luộc chín, bóc vỏ, có thể chiên sơ qua cho vàng lớp ngoài.',
+          'Xào săn thịt trên bếp, đổ nước dừa tươi ngập mặt thịt, đun sôi rồi hạ lửa liu riu 30 phút. Cho trứng cút vào kho thêm 10 phút cho thấm đều.'
+        ]
+      },
+      {
+        id: 'man_ca_tram_kho',
+        name: 'Cá trắm kho riềng thịt ba chỉ',
+        category: 'man',
+        protein: 'ca_haisan',
+        flavorProfile: 'dam_da',
+        prepTime: 60,
+        ingredients: [
+          { name: 'Cá trắm cắt khúc', amount: 600, unit: 'g', marketGroup: 'thit_haisan' },
+          { name: 'Thịt ba chỉ thái miếng', amount: 150, unit: 'g', marketGroup: 'thit_haisan' },
+          { name: 'Riềng tươi thái lát & giã nhỏ', amount: 100, unit: 'g', marketGroup: 'rau_cu' },
+          { name: 'Sả cây, ớt tươi', amount: 50, unit: 'g', marketGroup: 'rau_cu' },
+          { name: 'Nước hàng, nước mắm, tương bần (hoặc bột canh)', amount: 4, unit: 'thìa', marketGroup: 'gia_vi' }
+        ],
+        instructions: [
+          'Cá trắm rửa sạch với muối và gừng cho hết tanh, để ráo.',
+          'Xếp một lớp riềng lát và sả đập dập dưới đáy nồi để chống cháy và tạo mùi thơm. Xếp cá và thịt ba chỉ xen kẽ lên trên.',
+          'Ướp cá với nước mắm, nước hàng, riềng giã, ớt trong 20 phút. Đổ nước sôi ngập mặt cá, kho lửa nhỏ 45-50 phút đến khi nước cạn sánh.'
+        ]
+      },
+      {
+        id: 'man_nem_ran',
+        name: 'Nem rán Hà Nội truyền thống',
+        category: 'man',
+        protein: 'lon',
+        flavorProfile: 'gion_thom',
+        prepTime: 45,
+        ingredients: [
+          { name: 'Thịt nạc vai xay', amount: 350, unit: 'g', marketGroup: 'thit_haisan' },
+          { name: 'Tôm tươi bóc vỏ băm nhỏ', amount: 150, unit: 'g', marketGroup: 'thit_haisan' },
+          { name: 'Trứng gà', amount: 2, unit: 'quả', marketGroup: 'trung_dau' },
+          { name: 'Bánh đa nem', amount: 1, unit: 'tập', marketGroup: 'gia_vi' },
+          { name: 'Cà rốt, su hào (hoặc củ đậu), giá đỗ, hành lá', amount: 200, unit: 'g', marketGroup: 'rau_cu' },
+          { name: 'Miến dong, mộc nhĩ, nấm hương', amount: 60, unit: 'g', marketGroup: 'gia_vi' },
+          { name: 'Dầu ăn, nước mắm, hạt tiêu', amount: 200, unit: 'ml', marketGroup: 'gia_vi' }
+        ],
+        instructions: [
+          'Ngâm nở miến, mộc nhĩ, nấm hương rồi thái thật nhỏ. Bào sợi cà rốt, su hào và vắt nhẹ bớt nước.',
+          'Trộn đều thịt xay, tôm băm, rau củ, trứng gà, hạt tiêu và chút nước mắm (không ướp quá mặn để tránh chảy nước).',
+          'Cuốn nem vừa tay, rán 2 lửa trong chảo ngập dầu để vỏ nem vàng ruộm và giòn lâu. Pha nước chấm chua ngọt tỏi ớt ăn kèm.'
+        ]
+      },
+      {
+        id: 'man_thit_rang_chay_canh',
+        name: 'Thịt ba chỉ rang cháy cạnh',
+        category: 'man',
+        protein: 'lon',
+        flavorProfile: 'dam_da',
+        prepTime: 25,
+        ingredients: [
+          { name: 'Thịt ba chỉ', amount: 450, unit: 'g', marketGroup: 'thit_haisan' },
+          { name: 'Hành khô băm, hành lá', amount: 50, unit: 'g', marketGroup: 'rau_cu' },
+          { name: 'Nước mắm, đường, hạt tiêu', amount: 3, unit: 'thìa', marketGroup: 'gia_vi' }
+        ],
+        instructions: [
+          'Thịt ba chỉ thái miếng mỏng vừa ăn, chần qua nước sôi cho sạch rồi để ráo.',
+          'Cho thịt vào chảo đảo đều trên lửa vừa đến khi ra bớt mỡ và hai mặt thịt xém vàng cháy cạnh.',
+          'Chắt bớt mỡ thừa, phi thơm hành khô, rưới hỗn hợp nước mắm + đường + chút nước lọc vào đảo nhanh tay cho thấm, rắc hành lá và tiêu.'
+        ]
+      },
+      {
+        id: 'man_ga_rang_gung',
+        name: 'Gà ta rang gừng sả đậm đà',
+        category: 'man',
+        protein: 'ga',
+        flavorProfile: 'dam_da',
+        prepTime: 30,
+        ingredients: [
+          { name: 'Thịt gà ta chặt miếng', amount: 600, unit: 'g', marketGroup: 'thit_haisan' },
+          { name: 'Gừng tươi thái sợi & giã nhỏ', amount: 60, unit: 'g', marketGroup: 'rau_cu' },
+          { name: 'Sả băm, hành khô, lá chanh', amount: 40, unit: 'g', marketGroup: 'rau_cu' },
+          { name: 'Nước mắm, bột nghệ, đường, tiêu', amount: 3, unit: 'thìa', marketGroup: 'gia_vi' }
+        ],
+        instructions: [
+          'Ướp thịt gà chặt miếng với gừng giã, hành khô, nước mắm, bột nghệ và chút đường trong 15 phút.',
+          'Phi thơm sả băm và gừng thái sợi, cho thịt gà vào đảo săn trên lửa lớn.',
+          'Hạ lửa vừa, đậy vung rim 15 phút cho thịt gà chín mềm, nước sệt lại thì rắc lá chanh thái chỉ vào đảo đều.'
+        ]
+      },
+      {
+        id: 'man_bo_xao_can_toi',
+        name: 'Thịt bò xào cần tỏi tây',
+        category: 'man',
+        protein: 'bo',
+        flavorProfile: 'gion_thom',
+        prepTime: 20,
+        ingredients: [
+          { name: 'Thịt thăn bò thái mỏng', amount: 350, unit: 'g', marketGroup: 'thit_haisan' },
+          { name: 'Cần tây, tỏi tây (tỏi tươi)', amount: 250, unit: 'g', marketGroup: 'rau_cu' },
+          { name: 'Cà chua bổ múi cau', amount: 2, unit: 'quả', marketGroup: 'rau_cu' },
+          { name: 'Tỏi khô băm', amount: 20, unit: 'g', marketGroup: 'rau_cu' },
+          { name: 'Dầu hào, hạt nêm, dầu ăn, tiêu', amount: 3, unit: 'thìa', marketGroup: 'gia_vi' }
+        ],
+        instructions: [
+          'Ướp thịt bò với tỏi băm, dầu hào, hạt tiêu và 1 thìa dầu ăn trong 15 phút cho thịt mềm.',
+          'Cần tây, tỏi tây rửa sạch, cắt khúc 4cm. Cà chua bổ múi cau.',
+          'Phi thơm tỏi, xào thịt bò trên lửa thật lớn trong 1 phút cho tái rồi trút ra đĩa. Xào chín tới cần tỏi và cà chua rồi đổ thịt bò vào đảo chung 30 giây.'
+        ]
+      },
+      {
+        id: 'man_cha_la_lot',
+        name: 'Chả lá lốt rán thơm lừng',
+        category: 'man',
+        protein: 'lon',
+        flavorProfile: 'gion_thom',
+        prepTime: 30,
+        ingredients: [
+          { name: 'Thịt nạc vai có chút mỡ xay', amount: 400, unit: 'g', marketGroup: 'thit_haisan' },
+          { name: 'Lá lốt bánh tẻ', amount: 30, unit: 'lá', marketGroup: 'rau_cu' },
+          { name: 'Hành khô băm, hành lá', amount: 40, unit: 'g', marketGroup: 'rau_cu' },
+          { name: 'Nước mắm, hạt tiêu, dầu ăn', amount: 3, unit: 'thìa', marketGroup: 'gia_vi' }
+        ],
+        instructions: [
+          'Rửa sạch lá lốt, để ráo nước, chọn 4-5 lá nhỏ thái thật nhuyễn trộn cùng thịt xay, hành khô, nước mắm và hạt tiêu.',
+          'Trải mặt trái lá lốt lên thớt, múc một thìa nhân thịt đặt vào rồi cuộn tròn chặt tay.',
+          'Đun nóng dầu ăn, xếp chả lá lốt vào rán lửa vừa đến khi vỏ lá sẫm màu, thơm nức và nhân chín đều.'
+        ]
+      },
+      {
+        id: 'man_dau_nhoi_thit',
+        name: 'Đậu phụ nhồi thịt sốt cà chua',
+        category: 'man',
+        protein: 'trung_dau',
+        flavorProfile: 'dam_da',
+        prepTime: 35,
+        ingredients: [
+          { name: 'Đậu phụ mơ (đậu trắng)', amount: 4, unit: 'bìa', marketGroup: 'trung_dau' },
+          { name: 'Thịt nạc vai xay', amount: 250, unit: 'g', marketGroup: 'thit_haisan' },
+          { name: 'Cà chua chín', amount: 3, unit: 'quả', marketGroup: 'rau_cu' },
+          { name: 'Mộc nhĩ khô, hành lá, hành khô', amount: 50, unit: 'g', marketGroup: 'rau_cu' },
+          { name: 'Nước mắm, bột canh, dầu ăn', amount: 3, unit: 'thìa', marketGroup: 'gia_vi' }
+        ],
+        instructions: [
+          'Cắt đôi bìa đậu, khoét nhẹ ruột đậu trộn chung với thịt xay, mộc nhĩ băm nhỏ, hành khô và gia vị.',
+          'Nhồi hỗn hợp thịt vào từng miếng đậu, đem rán vàng mặt thịt và các mặt đậu.',
+          'Xào nhuyễn cà chua thành sốt, nêm gia vị vừa ăn rồi xếp đậu nhồi thịt vào om 10 phút cho ngấm sốt, rắc hành lá.'
+        ]
+      },
+      {
+        id: 'man_tom_rang_thit',
+        name: 'Tôm đồng rang thịt ba chỉ',
+        category: 'man',
+        protein: 'ca_haisan',
+        flavorProfile: 'dam_da',
+        prepTime: 25,
+        ingredients: [
+          { name: 'Tôm đồng tươi', amount: 300, unit: 'g', marketGroup: 'thit_haisan' },
+          { name: 'Thịt ba chỉ thái nhỏ', amount: 200, unit: 'g', marketGroup: 'thit_haisan' },
+          { name: 'Hành khô, hành lá', amount: 40, unit: 'g', marketGroup: 'rau_cu' },
+          { name: 'Nước mắm, đường, hạt tiêu', amount: 3, unit: 'thìa', marketGroup: 'gia_vi' }
+        ],
+        instructions: [
+          'Tôm cắt râu, rửa sạch để ráo. Thịt ba chỉ thái miếng con chì nhỏ.',
+          'Đảo thịt ba chỉ trên chảo cho ra mỡ và xém vàng, trút ra bát. Phi thơm hành khô rồi cho tôm vào đảo săn với chút nước mắm.',
+          'Đổ thịt ba chỉ vào rang chung với tôm, nêm thêm chút đường cho bóng đẹp, rang đến khi khô ráo thì rắc hành lá và tiêu.'
+        ]
+      },
+      {
+        id: 'man_trung_duc_thit',
+        name: 'Trứng đúc thịt băm rán vàng',
+        category: 'man',
+        protein: 'trung_dau',
+        flavorProfile: 'beo_ngay',
+        prepTime: 20,
+        ingredients: [
+          { name: 'Trứng gà hoặc trứng vịt', amount: 4, unit: 'quả', marketGroup: 'trung_dau' },
+          { name: 'Thịt nạc vai xay', amount: 200, unit: 'g', marketGroup: 'thit_haisan' },
+          { name: 'Hành lá, hành khô băm', amount: 40, unit: 'g', marketGroup: 'rau_cu' },
+          { name: 'Nước mắm, hạt tiêu, dầu ăn', amount: 2, unit: 'thìa', marketGroup: 'gia_vi' }
+        ],
+        instructions: [
+          'Đánh tan trứng với thịt xay, hành khô băm, hành lá thái nhỏ, 1 thìa nước mắm và chút hạt tiêu.',
+          'Làm nóng chảo với dầu ăn, đổ hỗn hợp trứng thịt vào, dàn đều và đậy vung rán lửa nhỏ.',
+          'Khi mặt dưới vàng thơm, lật mặt còn lại rán thêm 3 phút cho chín kỹ bên trong, cắt miếng tam giác vừa ăn.'
+        ]
+      },
+
+      // --- MÓN CANH (8 món) ---
+      {
+        id: 'canh_cua_rau_day',
+        name: 'Canh cua rau đay mồng tơi mướp hương',
+        category: 'canh',
+        protein: 'ca_haisan',
+        flavorProfile: 'thanh_mat',
+        prepTime: 30,
+        ingredients: [
+          { name: 'Cua đồng xay sẵn', amount: 350, unit: 'g', marketGroup: 'thit_haisan' },
+          { name: 'Rau đay', amount: 1, unit: 'mớ', marketGroup: 'rau_cu' },
+          { name: 'Rau mồng tơi', amount: 1, unit: 'mớ', marketGroup: 'rau_cu' },
+          { name: 'Mướp hương', amount: 1, unit: 'quả', marketGroup: 'rau_cu' },
+          { name: 'Hành khô, bột canh, mắm tôm (tùy chọn)', amount: 2, unit: 'thìa', marketGroup: 'gia_vi' }
+        ],
+        instructions: [
+          'Hòa cua xay với nước sạch, bóp nhẹ rồi lọc kỹ qua rây lấy nước cốt cua, bỏ bã. Khêu riêng phần gạch cua.',
+          'Đặt nồi nước cua lên bếp đun lửa vừa, khuấy nhẹ lúc đầu rồi để yên cho gạch cua đóng thành từng tảng nổi lên.',
+          'Phi thơm hành khô với gạch cua cho vàng thơm rồi đổ vào nồi. Thả rau đay, mồng tơi thái nhỏ và mướp hương vào nấu chín tới.'
+        ]
+      },
+      {
+        id: 'canh_suon_sau',
+        name: 'Canh sườn non nấu sấu chua',
+        category: 'canh',
+        protein: 'lon',
+        flavorProfile: 'chua_nhe',
+        prepTime: 35,
+        ingredients: [
+          { name: 'Sườn thăn non chặt miếng', amount: 350, unit: 'g', marketGroup: 'thit_haisan' },
+          { name: 'Quả sấu tươi (hoặc sấu đông đá)', amount: 5, unit: 'quả', marketGroup: 'rau_cu' },
+          { name: 'Cà chua bổ múi cau', amount: 2, unit: 'quả', marketGroup: 'rau_cu' },
+          { name: 'Hành lá, rau mùi tàu', amount: 40, unit: 'g', marketGroup: 'rau_cu' },
+          { name: 'Bột canh, nước mắm', amount: 2, unit: 'thìa', marketGroup: 'gia_vi' }
+        ],
+        instructions: [
+          'Sườn non rửa sạch, chần qua nước sôi rồi xào sơ với chút hành khô và nước mắm cho thơm.',
+          'Đổ nước vào ninh sườn mềm trong 20 phút, thả quả sấu và cà chua vào nấu cùng.',
+          'Khi sấu chín mềm, vớt sấu ra dầm nát lấy vị chua thanh, bỏ hạt, nêm lại gia vị và rắc hành mùi thái nhỏ.'
+        ]
+      },
+      {
+        id: 'canh_ngao_chua',
+        name: 'Canh ngao nấu chua dứa cà chua',
+        category: 'canh',
+        protein: 'ca_haisan',
+        flavorProfile: 'chua_nhe',
+        prepTime: 25,
+        ingredients: [
+          { name: 'Ngao tươi', amount: 800, unit: 'g', marketGroup: 'thit_haisan' },
+          { name: 'Cà chua chín', amount: 2, unit: 'quả', marketGroup: 'rau_cu' },
+          { name: 'Dứa (thơm) gọt sẵn', amount: 0.25, unit: 'quả', marketGroup: 'rau_cu' },
+          { name: 'Quả sấu hoặc me chua, hành răm, thì là', amount: 50, unit: 'g', marketGroup: 'rau_cu' },
+          { name: 'Bột canh, nước mắm', amount: 2, unit: 'thìa', marketGroup: 'gia_vi' }
+        ],
+        instructions: [
+          'Ngao ngâm nước vo gạo có cắt vài lát ớt cho nhả sạch cát, luộc mở miệng rồi chắt lấy phần nước trong, nhặt ruột ngao.',
+          'Phi thơm hành khô, xào chín cà chua và dứa thái lát, trút ruột ngao vào đảo nhanh với chút mắm.',
+          'Đổ phần nước luộc ngao vào đun sôi cùng quả sấu/me tạo vị chua thanh, rắc hành răm thì là thái nhỏ.'
+        ]
+      },
+      {
+        id: 'canh_cai_cuc',
+        name: 'Canh cải cúc nấu thịt băm gừng',
+        category: 'canh',
+        protein: 'lon',
+        flavorProfile: 'thanh_mat',
+        prepTime: 15,
+        ingredients: [
+          { name: 'Rau cải cúc (tần ô)', amount: 2, unit: 'mớ', marketGroup: 'rau_cu' },
+          { name: 'Thịt nạc vai băm', amount: 150, unit: 'g', marketGroup: 'thit_haisan' },
+          { name: 'Gừng tươi đập dập', amount: 15, unit: 'g', marketGroup: 'rau_cu' },
+          { name: 'Bột canh, hạt tiêu', amount: 2, unit: 'thìa', marketGroup: 'gia_vi' }
+        ],
+        instructions: [
+          'Rau cải cúc nhặt rửa sạch, cắt khúc 4cm. Thịt băm ướp chút bột canh và hạt tiêu.',
+          'Đun sôi nước dùng, thả từng viên thịt băm nhỏ vào nấu chín, cho vài lát gừng đập dập cho ấm bụng.',
+          'Thả rau cải cúc vào nồi, nước sôi bùng lại 1 phút là tắt bếp ngay để rau giữ được màu xanh và mùi thơm đặc trưng.'
+        ]
+      },
+      {
+        id: 'canh_bi_xanh_tom',
+        name: 'Canh bí xanh nấu tôm khô / tôm tươi',
+        category: 'canh',
+        protein: 'ca_haisan',
+        flavorProfile: 'thanh_mat',
+        prepTime: 20,
+        ingredients: [
+          { name: 'Bí xanh (bí đao)', amount: 400, unit: 'g', marketGroup: 'rau_cu' },
+          { name: 'Tôm tươi bóc vỏ (hoặc tôm khô)', amount: 120, unit: 'g', marketGroup: 'thit_haisan' },
+          { name: 'Hành lá, rau mùi, hành khô', amount: 40, unit: 'g', marketGroup: 'rau_cu' },
+          { name: 'Bột canh, nước mắm, tiêu', amount: 2, unit: 'thìa', marketGroup: 'gia_vi' }
+        ],
+        instructions: [
+          'Bí xanh gọt vỏ, bỏ ruột, thái miếng vát vừa ăn. Tôm băm sơ ướp chút hành khô và nước mắm.',
+          'Phi thơm hành, xào săn tôm rồi đổ nước lọc vào đun sôi.',
+          'Thả bí xanh vào nấu khoảng 5-7 phút cho bí chín trong, nêm vừa ăn và rắc hành mùi thái nhỏ.'
+        ]
+      },
+      {
+        id: 'canh_mang_suon',
+        name: 'Canh măng tươi nấu sườn lợn',
+        category: 'canh',
+        protein: 'lon',
+        flavorProfile: 'dam_da',
+        prepTime: 40,
+        ingredients: [
+          { name: 'Măng tươi (măng củ hoặc măng nứa)', amount: 350, unit: 'g', marketGroup: 'rau_cu' },
+          { name: 'Sườn thăn non', amount: 300, unit: 'g', marketGroup: 'thit_haisan' },
+          { name: 'Hành lá, rau mùi tàu', amount: 40, unit: 'g', marketGroup: 'rau_cu' },
+          { name: 'Nước mắm, bột canh', amount: 2, unit: 'thìa', marketGroup: 'gia_vi' }
+        ],
+        instructions: [
+          'Măng tươi thái miếng vừa ăn, luộc kỹ 2 lần nước với chút muối rồi rửa sạch để loại bỏ vị đắng.',
+          'Sườn chần sơ, ninh mềm 20 phút. Xào măng với chút hành khô và nước mắm cho ngấm gia vị.',
+          'Đổ măng vào nồi nước ninh sườn đun thêm 10 phút cho ngọt nước, rắc hành lá và mùi tàu.'
+        ]
+      },
+      {
+        id: 'canh_rau_ngot',
+        name: 'Canh rau ngót nấu thịt băm',
+        category: 'canh',
+        protein: 'lon',
+        flavorProfile: 'thanh_mat',
+        prepTime: 15,
+        ingredients: [
+          { name: 'Rau ngót tuốt lá', amount: 2, unit: 'mớ', marketGroup: 'rau_cu' },
+          { name: 'Thịt nạc vai băm', amount: 150, unit: 'g', marketGroup: 'thit_haisan' },
+          { name: 'Hành khô băm', amount: 15, unit: 'g', marketGroup: 'rau_cu' },
+          { name: 'Bột canh, nước mắm', amount: 2, unit: 'thìa', marketGroup: 'gia_vi' }
+        ],
+        instructions: [
+          'Rau ngót rửa sạch, vò nhẹ tay để khi nấu lá rau mềm và ngọt nước hơn.',
+          'Phi thơm hành khô, xào săn thịt băm với chút nước mắm rồi đổ nước vào đun sôi.',
+          'Thả rau ngót vào nấu sôi khoảng 3 phút cho rau chín mềm, nêm vừa miệng rồi tắt bếp.'
+        ]
+      },
+      {
+        id: 'canh_khoai_tay_xuong',
+        name: 'Canh khoai tây cà rốt hầm xương',
+        category: 'canh',
+        protein: 'lon',
+        flavorProfile: 'beo_ngay',
+        prepTime: 40,
+        ingredients: [
+          { name: 'Xương sườn hoặc xương đuôi lợn', amount: 350, unit: 'g', marketGroup: 'thit_haisan' },
+          { name: 'Khoai tây', amount: 2, unit: 'củ', marketGroup: 'rau_cu' },
+          { name: 'Cà rốt', amount: 1, unit: 'củ', marketGroup: 'rau_cu' },
+          { name: 'Hành lá, rau mùi', amount: 40, unit: 'g', marketGroup: 'rau_cu' },
+          { name: 'Bột canh, hạt tiêu', amount: 2, unit: 'thìa', marketGroup: 'gia_vi' }
+        ],
+        instructions: [
+          'Xương lợn chần sạch, ninh mềm lấy nước ngọt trong 25 phút.',
+          'Khoai tây, cà rốt gọt vỏ, cắt miếng vuông vừa ăn.',
+          'Cho cà rốt vào nấu trước 5 phút rồi cho khoai tây vào hầm thêm 10 phút đến khi bở mềm, rắc hành mùi.'
+        ]
+      },
+
+      // --- MÓN RAU / PHỤ (8 món) ---
+      {
+        id: 'rau_muong_luoc_sau',
+        name: 'Rau muống luộc giòn & nước sấu dầm',
+        category: 'rau',
+        protein: 'chay',
+        flavorProfile: 'chua_nhe',
+        prepTime: 15,
+        ingredients: [
+          { name: 'Rau muống ngọn non', amount: 1, unit: 'mớ lớn', marketGroup: 'rau_cu' },
+          { name: 'Quả sấu tươi', amount: 4, unit: 'quả', marketGroup: 'rau_cu' },
+          { name: 'Tỏi, ớt tươi, chanh', amount: 30, unit: 'g', marketGroup: 'rau_cu' },
+          { name: 'Nước mắm ngon, muối hạt', amount: 3, unit: 'thìa', marketGroup: 'gia_vi' }
+        ],
+        instructions: [
+          'Đun sôi nồi nước lớn với chút muối hạt, thả rau muống và vài quả sấu vào luộc trên lửa lớn để rau xanh mướt.',
+          'Vớt rau ra rổ cho ráo và giòn. Vớt sấu dầm nát vào bát nước luộc rau làm nước canh chua thanh giải nhiệt.',
+          'Pha bát nước mắm tỏi ớt chanh thật ngon để chấm rau muống.'
+        ]
+      },
+      {
+        id: 'rau_ca_phao',
+        name: 'Cà pháo muối xổi giòn tan',
+        category: 'rau',
+        protein: 'chay',
+        flavorProfile: 'chua_nhe',
+        prepTime: 20,
+        ingredients: [
+          { name: 'Cà pháo trắng tươi', amount: 300, unit: 'g', marketGroup: 'rau_cu' },
+          { name: 'Tỏi, ớt tươi, riềng thái chỉ', amount: 40, unit: 'g', marketGroup: 'rau_cu' },
+          { name: 'Giấm gạo, đường, muối hạt, nước mắm', amount: 4, unit: 'thìa', marketGroup: 'gia_vi' }
+        ],
+        instructions: [
+          'Cà pháo cắt bỏ cuống, bổ đôi hoặc thái lát mỏng, ngâm ngay vào chậu nước muối pha loãng và nước cốt chanh 15 phút cho trắng giòn và ra hết nhựa.',
+          'Vớt cà rửa sạch, vắt nhẹ cho ráo nước.',
+          'Trộn đều cà với tỏi băm, ớt, riềng, giấm, đường và chút nước mắm trong 20 phút là ăn giòn sần sật, cực hợp với canh cua.'
+        ]
+      },
+      {
+        id: 'rau_bap_cai_luoc',
+        name: 'Bắp cải luộc chấm nước mắm dầm trứng',
+        category: 'rau',
+        protein: 'trung_dau',
+        flavorProfile: 'thanh_mat',
+        prepTime: 15,
+        ingredients: [
+          { name: 'Bắp cải trắng', amount: 0.5, unit: 'cái', marketGroup: 'rau_cu' },
+          { name: 'Trứng gà hoặc trứng vịt luộc', amount: 1, unit: 'quả', marketGroup: 'trung_dau' },
+          { name: 'Gừng tươi thái chỉ', amount: 15, unit: 'g', marketGroup: 'rau_cu' },
+          { name: 'Nước mắm ngon, hạt tiêu', amount: 3, unit: 'thìa', marketGroup: 'gia_vi' }
+        ],
+        instructions: [
+          'Bắp cải thái miếng vuông to, rửa sạch. Đun sôi nước với vài lát gừng cho thơm, thả bắp cải vào luộc chín tới rồi vớt ra đĩa.',
+          'Dầm nát lòng đỏ và lòng trắng trứng luộc vào bát nước mắm ngon, thêm chút hạt tiêu.',
+          'Món rau dân dã mà cực kỳ đưa cơm vào những ngày bận rộn.'
+        ]
+      },
+      {
+        id: 'rau_dau_tam_hanh',
+        name: 'Đậu phụ rán tẩm nước mắm hành',
+        category: 'rau',
+        protein: 'trung_dau',
+        flavorProfile: 'gion_thom',
+        prepTime: 15,
+        ingredients: [
+          { name: 'Đậu phụ mơ', amount: 3, unit: 'bìa', marketGroup: 'trung_dau' },
+          { name: 'Hành lá tươi thái nhỏ', amount: 50, unit: 'g', marketGroup: 'rau_cu' },
+          { name: 'Nước mắm, đường, dầu ăn', amount: 3, unit: 'thìa', marketGroup: 'gia_vi' }
+        ],
+        instructions: [
+          'Đậu phụ thái miếng vuông vừa ăn, rán vàng giòn các mặt trên chảo dầu nóng.',
+          'Pha hỗn hợp 2 thìa nước mắm, 1 thìa đường, 2 thìa nước lọc và nhiều hành lá thái nhỏ.',
+          'Gắp đậu nóng hổi nhúng nhanh qua bát mắm hành rồi xếp ra đĩa cho hành chín tái xanh mướt.'
+        ]
+      },
+      {
+        id: 'rau_su_su_xao',
+        name: 'Su su xào tỏi xanh mướt',
+        category: 'rau',
+        protein: 'chay',
+        flavorProfile: 'thanh_mat',
+        prepTime: 15,
+        ingredients: [
+          { name: 'Su su non', amount: 2, unit: 'quả', marketGroup: 'rau_cu' },
+          { name: 'Cà rốt (tạo màu đẹp)', amount: 0.5, unit: 'củ', marketGroup: 'rau_cu' },
+          { name: 'Tỏi khô đập dập', amount: 25, unit: 'g', marketGroup: 'rau_cu' },
+          { name: 'Dầu hào, bột canh, dầu ăn', amount: 2, unit: 'thìa', marketGroup: 'gia_vi' }
+        ],
+        instructions: [
+          'Su su gọt vỏ dưới vòi nước cho hết nhựa, thái con chì hoặc lát mỏng vừa ăn.',
+          'Phi thơm một nửa lượng tỏi, trút su su và cà rốt vào xào trên lửa lớn với bột canh và chút dầu hào.',
+          'Khi su su chín giòn, cho nốt phần tỏi còn lại vào đảo dậy mùi rồi tắt bếp.'
+        ]
+      },
+      {
+        id: 'rau_lac_rang_muoi',
+        name: 'Lạc rang muối giòn bùi',
+        category: 'rau',
+        protein: 'chay',
+        flavorProfile: 'gion_thom',
+        prepTime: 15,
+        ingredients: [
+          { name: 'Lạc nhân đỏ', amount: 200, unit: 'g', marketGroup: 'gia_vi' },
+          { name: 'Muối tinh mịn', amount: 1, unit: 'thìa', marketGroup: 'gia_vi' },
+          { name: 'Dầu ăn', amount: 1, unit: 'thìa', marketGroup: 'gia_vi' }
+        ],
+        instructions: [
+          'Cho lạc nhân vào chảo cùng 1 thìa dầu ăn, đảo đều tay liên tục trên lửa nhỏ khoảng 10-12 phút.',
+          'Khi nghe tiếng lạc nổ lách tách và lớp vỏ lụa sẫm màu giòn rụm thì tắt bếp, trút ra rổ cho nguội bớt.',
+          'Xóc đều lạc với muối tinh mịn để muối bám đều quanh hạt lạc.'
+        ]
+      },
+      {
+        id: 'rau_gia_xao_muop',
+        name: 'Giá đỗ xào mướp hương thanh mát',
+        category: 'rau',
+        protein: 'chay',
+        flavorProfile: 'thanh_mat',
+        prepTime: 12,
+        ingredients: [
+          { name: 'Giá đỗ sạch', amount: 250, unit: 'g', marketGroup: 'rau_cu' },
+          { name: 'Mướp hương', amount: 1, unit: 'quả', marketGroup: 'rau_cu' },
+          { name: 'Hành lá, hành khô', amount: 30, unit: 'g', marketGroup: 'rau_cu' },
+          { name: 'Bột canh, dầu ăn', amount: 2, unit: 'thìa', marketGroup: 'gia_vi' }
+        ],
+        instructions: [
+          'Mướp hương gọt vỏ, thái miếng vát mỏng. Giá đỗ rửa sạch để ráo.',
+          'Phi thơm hành khô, cho mướp vào xào trước 2 phút cho hơi mềm.',
+          'Trút giá đỗ vào đảo nhanh tay trên lửa lớn 1 phút, nêm bột canh và rắc hành lá.'
+        ]
+      },
+      {
+        id: 'rau_dua_cai_chua',
+        name: 'Dưa cải bắp muối chua truyền thống',
+        category: 'rau',
+        protein: 'chay',
+        flavorProfile: 'chua_nhe',
+        prepTime: 10,
+        ingredients: [
+          { name: 'Dưa cải muối chua vàng', amount: 300, unit: 'g', marketGroup: 'rau_cu' },
+          { name: 'Hành khô thái lát, ớt tươi', amount: 20, unit: 'g', marketGroup: 'rau_cu' },
+          { name: 'Đường cát (cân bằng vị chua)', amount: 1, unit: 'thìa', marketGroup: 'gia_vi' }
+        ],
+        instructions: [
+          'Vắt nhẹ dưa cải muối cho ráo bớt nước chua, cắt khúc vừa ăn.',
+          'Trộn dưa với chút đường, hành khô thái lát và ớt tươi để vị chua dịu hài hòa.',
+          'Món dưa chống ngấy tuyệt vời khi ăn cùng thịt kho tàu, thịt rang cháy cạnh hoặc nem rán.'
+        ]
+      }
+    ];
+
+    // =========================================================================
+    // 2. CONSTANTS, LABELS & APPLICATION STATE
+    // =========================================================================
+    const DAYS_OF_WEEK = [
+      { key: 'mon', label: 'Thứ Hai', short: 'Thứ 2' },
+      { key: 'tue', label: 'Thứ Ba', short: 'Thứ 3' },
+      { key: 'wed', label: 'Thứ Tư', short: 'Thứ 4' },
+      { key: 'thu', label: 'Thứ Năm', short: 'Thứ 5' },
+      { key: 'fri', label: 'Thứ Sáu', short: 'Thứ 6' },
+      { key: 'sat', label: 'Thứ Bảy', short: 'Thứ 7' },
+      { key: 'sun', label: 'Chủ Nhật', short: 'CN' }
+    ];
+
+    const CATEGORY_META = {
+      sang: { label: 'Bữa sáng', badgeClass: 'bg-amber-100 text-amber-800', icon: '🍜' },
+      man:  { label: 'Món mặn', badgeClass: 'bg-terracotta-100 text-terracotta-700', icon: '🍖' },
+      canh: { label: 'Món canh', badgeClass: 'bg-bamboo-100 text-bamboo-700', icon: '🥣' },
+      rau:  { label: 'Món rau / phụ', badgeClass: 'bg-emerald-100 text-emerald-800', icon: '🥬' }
+    };
+
+    const PROTEIN_LABELS = {
+      lon: 'Thịt lợn',
+      ga: 'Thịt gà/vịt',
+      bo: 'Thịt bò',
+      ca_haisan: 'Cá & Hải sản',
+      trung_dau: 'Trứng & Đậu',
+      chay: 'Rau củ / Thanh đạm'
+    };
+
+    const FLAVOR_LABELS = {
+      dam_da: 'Đậm đà',
+      thanh_mat: 'Thanh mát',
+      chua_nhe: 'Chua nhẹ giải ngấy',
+      beo_ngay: 'Béo ngậy',
+      gion_thom: 'Giòn thơm'
+    };
+
+    const MARKET_STALLS = [
+      { key: 'thit_haisan', title: 'Thịt & Hải sản', icon: '🥩', headerClass: 'bg-terracotta-50 text-terracotta-700 border-terracotta-100' },
+      { key: 'rau_cu', title: 'Rau củ & Gia vị tươi', icon: '🥬', headerClass: 'bg-bamboo-50 text-bamboo-700 border-bamboo-100' },
+      { key: 'trung_dau', title: 'Trứng, Đậu & Đồ mát', icon: '🥚', headerClass: 'bg-amber-50 text-amber-800 border-amber-100' },
+      { key: 'gia_vi', title: 'Đồ khô & Gia vị nêm', icon: '🧂', headerClass: 'bg-cream-100 text-ink-800 border-cream-200' }
+    ];
+
+    const PANTRY_STAPLE_KEYWORDS = [
+      'nước mắm', 'muối', 'hạt tiêu', 'tiêu', 'dầu ăn', 'đường', 'bột canh', 'hạt nêm', 'giấm', 'nước hàng', 'bột nghệ'
+    ];
+
+    const STORAGE_KEY = 'com_nha_bac_bo_state_v1';
+
+    let appState = {
+      servings: 4,
+      customRecipes: [],
+      weeklyPlan: {}, // { mon: { sang: 'id', trua: { man, canh, rau }, toi: { man, canh, rau } }, ... }
+      checkedGroceries: {}, // { 'itemKey': true }
+      activeTab: 'planner',
+      selectedDayFilter: 'all',
+      recipeCategoryFilter: 'all'
+    };
+
+    // Editor temporary state
+    let currentEditingContext = null; // { dayKey, mealType }
+    let currentDetailRecipeId = null;
+
+    // =========================================================================
+    // 3. INITIALIZATION & STORAGE PERSISTENCE
+    // =========================================================================
+    function initEmptyWeek() {
+      const plan = {};
+      DAYS_OF_WEEK.forEach(d => {
+        plan[d.key] = {
+          sang: null,
+          trua: { man: null, canh: null, rau: null },
+          toi: { man: null, canh: null, rau: null }
+        };
+      });
+      return plan;
+    }
+
+    function loadState() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (raw) {
+          const parsed = JSON.parse(raw);
+          appState.servings = parsed.servings || 4;
+          appState.customRecipes = Array.isArray(parsed.customRecipes) ? parsed.customRecipes : [];
+          appState.weeklyPlan = parsed.weeklyPlan || initEmptyWeek();
+          appState.checkedGroceries = parsed.checkedGroceries || {};
+        } else {
+          appState.weeklyPlan = initEmptyWeek();
+          // Seed initial 2 days with authentic Northern meals so the user sees an inspiring layout right away
+          appState.weeklyPlan.mon = {
+            sang: 'sang_pho_bo',
+            trua: { man: 'man_thit_kho_tau', canh: 'canh_cua_rau_day', rau: 'rau_ca_phao' },
+            toi: { man: 'man_ca_tram_kho', canh: 'canh_cai_cuc', rau: 'rau_su_su_xao' }
+          };
+          appState.weeklyPlan.tue = {
+            sang: 'sang_xoi_xeo',
+            trua: { man: 'man_ga_rang_gung', canh: 'canh_suon_sau', rau: 'rau_muong_luoc_sau' },
+            toi: { man: 'man_dau_nhoi_thit', canh: 'canh_ngao_chua', rau: 'rau_bap_cai_luoc' }
+          };
+          saveState();
+        }
+      } catch (e) {
+        console.error('Lỗi đọc dữ liệu localStorage:', e);
+        appState.weeklyPlan = initEmptyWeek();
+      }
+      document.getElementById('servingsSelect').value = String(appState.servings);
+    }
+
+    function saveState() {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify({
+          servings: appState.servings,
+          customRecipes: appState.customRecipes,
+          weeklyPlan: appState.weeklyPlan,
+          checkedGroceries: appState.checkedGroceries
+        }));
+        updateBadges();
+      } catch (e) {
+        console.error('Lỗi lưu dữ liệu:', e);
+      }
+    }
+
+    function getAllRecipes() {
+      return [...appState.customRecipes, ...STARTER_RECIPES];
+    }
+
+    function getRecipeById(id) {
+      if (!id) return null;
+      return getAllRecipes().find(r => r.id === id) || null;
+    }
+
+    function updateBadges() {
+      document.getElementById('recipeCountBadge').textContent = getAllRecipes().length;
+      const items = aggregateGroceries();
+      const uncheckedCount = items.filter(i => !appState.checkedGroceries[i.key]).length;
+      document.getElementById('groceryCountBadge').textContent = uncheckedCount;
+    }
+
+    function showToast(message, icon = '✅') {
+      const toast = document.getElementById('toastNotification');
+      document.getElementById('toastMessage').textContent = message;
+      document.getElementById('toastIcon').textContent = icon;
+      toast.classList.remove('translate-y-20', 'opacity-0');
+      clearTimeout(window._toastTimer);
+      window._toastTimer = setTimeout(() => {
+        toast.classList.add('translate-y-20', 'opacity-0');
+      }, 2800);
+    }
+
+    // =========================================================================
+    // 4. NAVIGATION & GLOBAL CONTROLS
+    // =========================================================================
+    function switchTab(tabName) {
+      appState.activeTab = tabName;
+      ['planner', 'recipes', 'grocery'].forEach(t => {
+        const viewEl = document.getElementById(`view-${t}`);
+        const btnEl = document.getElementById(`tab-${t}`);
+        if (t === tabName) {
+          viewEl.classList.remove('hidden');
+          btnEl.className = 'tab-btn flex-1 sm:flex-none flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-xs sm:text-sm font-semibold transition whitespace-nowrap bg-terracotta-500 text-white shadow-sm';
+        } else {
+          viewEl.classList.add('hidden');
+          btnEl.className = 'tab-btn flex-1 sm:flex-none flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-xs sm:text-sm font-semibold transition whitespace-nowrap bg-cream-100 text-ink-600 hover:bg-cream-200';
+        }
+      });
+
+      if (tabName === 'planner') renderPlannerView();
+      if (tabName === 'recipes') renderRecipesView();
+      if (tabName === 'grocery') renderGroceryView();
+    }
+
+    function updateServings(val) {
+      appState.servings = parseInt(val, 10) || 4;
+      saveState();
+      document.getElementById('groceryServingsLabel').textContent = `${appState.servings} người ăn`;
+      if (appState.activeTab === 'grocery') renderGroceryView();
+      showToast(`Đã cập nhật khẩu phần cho ${appState.servings} người ăn`, '👨‍👩‍👧‍👦');
+    }
+
+    // =========================================================================
+    // 5. WEEKLY PLANNER VIEW & SMART AUTO-GENERATION
+    // =========================================================================
+    function filterPlannerDay(dayKey) {
+      appState.selectedDayFilter = dayKey;
+      document.querySelectorAll('.day-pill').forEach(btn => {
+        btn.className = 'day-pill px-3 py-1.5 rounded-lg text-xs font-medium bg-cream-100 text-ink-600 whitespace-nowrap';
+      });
+      const activePill = document.getElementById(`day-pill-${dayKey}`);
+      if (activePill) {
+        activePill.className = 'day-pill px-3 py-1.5 rounded-lg text-xs font-semibold bg-ink-800 text-white whitespace-nowrap';
+      }
+      renderPlannerView();
+    }
+
+    function renderPlannerView() {
+      const grid = document.getElementById('weeklyGrid');
+      const daysToShow = appState.selectedDayFilter === 'all'
+        ? DAYS_OF_WEEK
+        : DAYS_OF_WEEK.filter(d => d.key === appState.selectedDayFilter);
+
+      grid.innerHTML = daysToShow.map(day => {
+        const dayPlan = appState.weeklyPlan[day.key] || { sang: null, trua: {}, toi: {} };
+        const sangDish = getRecipeById(dayPlan.sang);
+
+        return `
+          <div class="bg-white rounded-2xl border border-cream-200 shadow-xs flex flex-col overflow-hidden">
+            <!-- Day Header -->
+            <div class="bg-cream-100/80 px-4 py-3 border-b border-cream-200 flex items-center justify-between">
+              <h3 class="font-serif font-bold text-base text-ink-800">${day.label}</h3>
+              <span class="text-[11px] font-medium text-ink-600 bg-white px-2 py-0.5 rounded-md border border-cream-200">3 bữa</span>
+            </div>
+
+            <div class="p-3.5 space-y-3 flex-1 flex flex-col justify-between">
+              <!-- BỮA SÁNG -->
+              <div onclick="openMealEditor('${day.key}', 'sang')" class="tray-card cursor-pointer rounded-xl p-2.5 bg-amber-50/60 border border-amber-200/70 hover:border-amber-400">
+                <div class="flex items-center justify-between mb-1">
+                  <span class="text-[11px] font-bold uppercase tracking-wider text-amber-800">🍜 Bữa Sáng</span>
+                  <span class="text-[11px] text-amber-700 font-medium">${sangDish ? 'Đổi món' : '+ Chọn'}</span>
+                </div>
+                ${sangDish
+                  ? `<div class="text-xs sm:text-sm font-semibold text-ink-800 line-clamp-1">${sangDish.name}</div>`
+                  : `<div class="text-xs italic text-ink-400">Chưa chọn món sáng...</div>`
+                }
+              </div>
+
+              <!-- BỮA TRƯA -->
+              ${renderTrayCardHTML(day.key, 'trua', '☀️ Bữa Trưa', dayPlan.trua)}
+
+              <!-- BỮA TỐI -->
+              ${renderTrayCardHTML(day.key, 'toi', '🌙 Bữa Tối', dayPlan.toi)}
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function renderTrayCardHTML(dayKey, mealType, title, tray) {
+      const safeTray = tray || { man: null, canh: null, rau: null };
+      const dishMan = getRecipeById(safeTray.man);
+      const dishCanh = getRecipeById(safeTray.canh);
+      const dishRau = getRecipeById(safeTray.rau);
+      const hasAny = dishMan || dishCanh || dishRau;
+
+      return `
+        <div onclick="openMealEditor('${dayKey}', '${mealType}')" class="tray-card cursor-pointer rounded-xl p-3 bg-cream-50 border border-cream-200 hover:border-terracotta-400 space-y-2">
+          <div class="flex items-center justify-between border-b border-cream-200/80 pb-1.5">
+            <span class="text-xs font-bold text-ink-800">${title}</span>
+            <span class="text-[11px] font-semibold text-terracotta-600">${hasAny ? 'Soạn mâm' : '+ Lập mâm'}</span>
+          </div>
+
+          <div class="space-y-1.5 text-xs">
+            <!-- Món mặn -->
+            <div class="flex items-start gap-1.5">
+              <span class="shrink-0 px-1.5 py-0.2 rounded text-[10px] font-bold bg-terracotta-100 text-terracotta-700">Mặn</span>
+              <span class="${dishMan ? 'font-medium text-ink-800' : 'text-ink-400 italic'} line-clamp-1">
+                ${dishMan ? dishMan.name : 'Chưa chọn món mặn'}
+              </span>
+            </div>
+            <!-- Món canh -->
+            <div class="flex items-start gap-1.5">
+              <span class="shrink-0 px-1.5 py-0.2 rounded text-[10px] font-bold bg-bamboo-100 text-bamboo-700">Canh</span>
+              <span class="${dishCanh ? 'font-medium text-ink-800' : 'text-ink-400 italic'} line-clamp-1">
+                ${dishCanh ? dishCanh.name : 'Chưa chọn món canh'}
+              </span>
+            </div>
+            <!-- Món rau -->
+            <div class="flex items-start gap-1.5">
+              <span class="shrink-0 px-1.5 py-0.2 rounded text-[10px] font-bold bg-emerald-100 text-emerald-800">Rau</span>
+              <span class="${dishRau ? 'font-medium text-ink-800' : 'text-ink-400 italic'} line-clamp-1">
+                ${dishRau ? dishRau.name : 'Chưa chọn rau/phụ'}
+              </span>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    // Smart Tray Pairing Helper: picks complementary Canh & Rau for a given Món Mặn
+    function buildHarmoniousTray(preferredProtein = null, usedMainIds = new Set()) {
+      const all = getAllRecipes();
+      const manList = all.filter(r => r.category === 'man');
+      const canhList = all.filter(r => r.category === 'canh');
+      const rauList = all.filter(r => r.category === 'rau');
+
+      // Filter Món mặn by preferred protein & unused in week if possible
+      let candidateMan = manList.filter(r => !usedMainIds.has(r.id));
+      if (preferredProtein) {
+        const byProt = candidateMan.filter(r => r.protein === preferredProtein);
+        if (byProt.length > 0) candidateMan = byProt;
+      }
+      if (candidateMan.length === 0) candidateMan = manList;
+      const chosenMan = candidateMan[Math.floor(Math.random() * candidateMan.length)];
+
+      // Score Món canh based on culinary harmony with chosenMan
+      const scoredCanh = canhList.map(c => {
+        let score = Math.random() * 2;
+        // Avoid duplicate main protein (except chay/rau_cu)
+        if (chosenMan && c.protein !== 'chay' && c.protein === chosenMan.protein) score -= 10;
+        // Rich/fried/fatty main dish -> boost sour or refreshing soup
+        if (chosenMan && ['dam_da', 'beo_ngay', 'gion_thom'].includes(chosenMan.flavorProfile)) {
+          if (['chua_nhe', 'thanh_mat'].includes(c.flavorProfile)) score += 5;
+        }
+        return { item: c, score };
+      }).sort((a, b) => b.score - a.score);
+      const chosenCanh = scoredCanh[0]?.item || null;
+
+      // Score Món rau/phụ based on harmony with both chosenMan and chosenCanh
+      const scoredRau = rauList.map(r => {
+        let score = Math.random() * 2;
+        if (chosenMan && r.protein !== 'chay' && r.protein === chosenMan.protein) score -= 8;
+        if (chosenCanh && r.protein !== 'chay' && r.protein === chosenCanh.protein) score -= 8;
+        // Avoid two sour dishes at once
+        if (chosenCanh && chosenCanh.flavorProfile === 'chua_nhe' && r.flavorProfile === 'chua_nhe') score -= 4;
+        // If main is rich/heavy, boost pickled/sour or boiled greens
+        if (chosenMan && ['dam_da', 'beo_ngay'].includes(chosenMan.flavorProfile) && ['chua_nhe', 'thanh_mat'].includes(r.flavorProfile)) {
+          score += 4;
+        }
+        return { item: r, score };
+      }).sort((a, b) => b.score - a.score);
+      const chosenRau = scoredRau[0]?.item || null;
+
+      return {
+        man: chosenMan ? chosenMan.id : null,
+        canh: chosenCanh ? chosenCanh.id : null,
+        rau: chosenRau ? chosenRau.id : null
+      };
+    }
+
+    function autoGenerateWeek() {
+      const sangList = getAllRecipes().filter(r => r.category === 'sang');
+      // Rotate proteins across the week so family doesn't eat the same meat consecutively
+      const proteinRotation = ['lon', 'ca_haisan', 'ga', 'bo', 'trung_dau', 'lon', 'ca_haisan'];
+      const usedMainIds = new Set();
+
+      DAYS_OF_WEEK.forEach((day, idx) => {
+        const sangDish = sangList[idx % sangList.length];
+        const lunchProtein = proteinRotation[idx % proteinRotation.length];
+        const dinnerProtein = proteinRotation[(idx + 2) % proteinRotation.length];
+
+        const lunchTray = buildHarmoniousTray(lunchProtein, usedMainIds);
+        if (lunchTray.man) usedMainIds.add(lunchTray.man);
+
+        const dinnerTray = buildHarmoniousTray(dinnerProtein, usedMainIds);
+        if (dinnerTray.man) usedMainIds.add(dinnerTray.man);
+
+        appState.weeklyPlan[day.key] = {
+          sang: sangDish ? sangDish.id : null,
+          trua: lunchTray,
+          toi: dinnerTray
+        };
+      });
+
+      saveState();
+      renderPlannerView();
+      showToast('Đã lập thực đơn cả tuần cân bằng đạm & chuẩn vị Bắc!', '✨');
+    }
+
+    function confirmClearWeek() {
+      appState.weeklyPlan = initEmptyWeek();
+      saveState();
+      renderPlannerView();
+      showToast('Đã làm trống thực đơn cả tuần', '🧹');
+    }
+
+    // =========================================================================
+    // 6. MÂM CƠM SLOT EDITOR & SMART PAIRING ENGINE
+    // =========================================================================
+    function openMealEditor(dayKey, mealType) {
+      currentEditingContext = { dayKey, mealType };
+      const dayObj = DAYS_OF_WEEK.find(d => d.key === dayKey);
+      const mealNames = { sang: 'Bữa Sáng', trua: 'Bữa Trưa', toi: 'Bữa Tối' };
+      document.getElementById('editorDayBadge').textContent = `${dayObj.label} • ${mealNames[mealType]}`;
+
+      const container = document.getElementById('editorSlotsContainer');
+      const smartBox = document.getElementById('smartPairingBox');
+
+      if (mealType === 'sang') {
+        smartBox.classList.add('hidden');
+        const currentSangId = appState.weeklyPlan[dayKey]?.sang || '';
+        container.innerHTML = renderSlotSelectGroup('sang', '🍜 Chọn món ăn sáng', currentSangId);
+      } else {
+        smartBox.classList.remove('hidden');
+        const tray = appState.weeklyPlan[dayKey]?.[mealType] || { man: '', canh: '', rau: '' };
+        container.innerHTML = `
+          ${renderSlotSelectGroup('man', '🍖 1. Món Mặn (Món chính)', tray.man || '')}
+          ${renderSlotSelectGroup('canh', '🥣 2. Món Canh (Giải nhiệt / Hài hòa)', tray.canh || '')}
+          ${renderSlotSelectGroup('rau', '🥬 3. Món Rau / Đồ ăn kèm', tray.rau || '')}
+        `;
+      }
+
+      // Populate copy-to-another-slot dropdown
+      const copySelect = document.getElementById('copyTargetSelect');
+      const options = [];
+      DAYS_OF_WEEK.forEach(d => {
+        if (mealType === 'sang') {
+          if (d.key !== dayKey) options.push(`<option value="${d.key}:sang">${d.label} - Bữa Sáng</option>`);
+        } else {
+          ['trua', 'toi'].forEach(mt => {
+            if (!(d.key === dayKey && mt === mealType)) {
+              options.push(`<option value="${d.key}:${mt}">${d.label} - ${mt === 'trua' ? 'Bữa Trưa' : 'Bữa Tối'}</option>`);
+            }
+          });
+        }
+      });
+      copySelect.innerHTML = options.join('');
+
+      evaluateCurrentTrayPairing();
+      document.getElementById('mealEditorModal').classList.remove('hidden');
+    }
+
+    function renderSlotSelectGroup(category, label, selectedId) {
+      const recipes = getAllRecipes().filter(r => r.category === category);
+      const optionsHtml = recipes.map(r => {
+        const tag = `${PROTEIN_LABELS[r.protein]} • ${FLAVOR_LABELS[r.flavorProfile]}`;
+        return `<option value="${r.id}" ${r.id === selectedId ? 'selected' : ''}>${r.name} (${tag})</option>`;
+      }).join('');
+
+      return `
+        <div class="bg-white p-3.5 rounded-xl border border-cream-200 space-y-2">
+          <div class="flex items-center justify-between">
+            <label for="slot-select-${category}" class="text-xs sm:text-sm font-bold text-ink-800">${label}</label>
+            <span id="slot-hint-${category}" class="text-[11px] font-medium text-bamboo-700"></span>
+          </div>
+          <select id="slot-select-${category}" onchange="evaluateCurrentTrayPairing()" class="w-full px-3 py-2.5 rounded-xl bg-cream-50 border border-cream-200 text-xs sm:text-sm font-medium text-ink-800 focus:outline-none focus:border-terracotta-500">
+            <option value="">-- Chưa chọn món --</option>
+            ${optionsHtml}
+          </select>
+        </div>
+      `;
+    }
+
+    function evaluateCurrentTrayPairing() {
+      if (!currentEditingContext || currentEditingContext.mealType === 'sang') {
+        document.getElementById('pairingWarningBox').classList.add('hidden');
+        return;
+      }
+
+      const manId = document.getElementById('slot-select-man')?.value;
+      const canhId = document.getElementById('slot-select-canh')?.value;
+      const rauId = document.getElementById('slot-select-rau')?.value;
+
+      const dishMan = getRecipeById(manId);
+      const dishCanh = getRecipeById(canhId);
+      const dishRau = getRecipeById(rauId);
+
+      const adviceEl = document.getElementById('pairingAdviceText');
+      const warnBox = document.getElementById('pairingWarningBox');
+      const warnText = document.getElementById('pairingWarningText');
+      const hintCanh = document.getElementById('slot-hint-canh');
+      const hintRau = document.getElementById('slot-hint-rau');
+
+      if (hintCanh) hintCanh.textContent = '';
+      if (hintRau) hintRau.textContent = '';
+
+      // Dynamic culinary pairing recommendations
+      if (dishMan) {
+        if (['dam_da', 'beo_ngay', 'gion_thom'].includes(dishMan.flavorProfile)) {
+          adviceEl.innerHTML = `Vì <strong>${dishMan.name}</strong> có vị ${FLAVOR_LABELS[dishMan.flavorProfile].toLowerCase()}, bạn nên chọn canh có vị <strong>chua nhẹ hoặc thanh mát</strong> (như Canh cua, Canh sấu, Canh cải cúc) và rau luộc/dưa muối để giải ngấy.`;
+          if (hintCanh) hintCanh.textContent = 'Gợi ý: Canh chua nhẹ / thanh mát';
+          if (hintRau) hintRau.textContent = 'Gợi ý: Rau luộc / Cà muối / Dưa chua';
+        } else {
+          adviceEl.innerHTML = `<strong>${dishMan.name}</strong> có vị ${FLAVOR_LABELS[dishMan.flavorProfile].toLowerCase()}, rất dễ kết hợp với các món canh ngọt thanh và rau xào tỏi.`;
+        }
+      } else {
+        adviceEl.textContent = 'Chọn Món mặn trước, hệ thống sẽ gợi ý Món canh và Món rau hài hòa vị Bắc, tránh trùng đạm.';
+      }
+
+      // Check for duplicate protein or heavy clashes
+      const warnings = [];
+      if (dishMan && dishCanh && dishMan.protein !== 'chay' && dishMan.protein === dishCanh.protein) {
+        warnings.push(`Trùng nguyên liệu chính: Cả <strong>${dishMan.name}</strong> và <strong>${dishCanh.name}</strong> đều dùng <strong>${PROTEIN_LABELS[dishMan.protein]}</strong>. Bạn nên đổi sang canh hải sản/rau củ để bữa cơm đa dạng hơn.`);
+      }
+      if (dishMan && dishRau && dishMan.protein !== 'chay' && dishMan.protein === dishRau.protein) {
+        warnings.push(`Trùng nguyên liệu: <strong>${dishMan.name}</strong> và <strong>${dishRau.name}</strong> cùng dùng <strong>${PROTEIN_LABELS[dishMan.protein]}</strong>.`);
+      }
+      if (dishCanh && dishRau && dishCanh.flavorProfile === 'chua_nhe' && dishRau.flavorProfile === 'chua_nhe') {
+        warnings.push(`Cả món canh và món phụ đều có vị chua nhẹ, có thể làm bữa ăn hơi nhiều vị chua.`);
+      }
+
+      if (warnings.length > 0) {
+        warnText.innerHTML = warnings.join('<br/>');
+        warnBox.classList.remove('hidden');
+      } else {
+        warnBox.classList.add('hidden');
+      }
+    }
+
+    function smartCompleteCurrentTray() {
+      if (!currentEditingContext || currentEditingContext.mealType === 'sang') return;
+
+      const currentManId = document.getElementById('slot-select-man')?.value;
+      const dishMan = getRecipeById(currentManId);
+
+      // Generate a full harmonious tray, preserving the user's chosen Món mặn if already picked
+      const suggested = buildHarmoniousTray();
+      if (dishMan) {
+        // Re-score canh & rau specifically against the user's selected dishMan
+        const all = getAllRecipes();
+        const canhList = all.filter(r => r.category === 'canh');
+        const rauList = all.filter(r => r.category === 'rau');
+
+        const bestCanh = canhList.map(c => {
+          let score = Math.random() * 2;
+          if (c.protein !== 'chay' && c.protein === dishMan.protein) score -= 10;
+          if (['dam_da', 'beo_ngay', 'gion_thom'].includes(dishMan.flavorProfile) && ['chua_nhe', 'thanh_mat'].includes(c.flavorProfile)) score += 5;
+          return { item: c, score };
+        }).sort((a, b) => b.score - a.score)[0]?.item;
+
+        const bestRau = rauList.map(r => {
+          let score = Math.random() * 2;
+          if (r.protein !== 'chay' && r.protein === dishMan.protein) score -= 8;
+          if (bestCanh && bestCanh.flavorProfile === 'chua_nhe' && r.flavorProfile === 'chua_nhe') score -= 4;
+          if (['dam_da', 'beo_ngay'].includes(dishMan.flavorProfile) && ['chua_nhe', 'thanh_mat'].includes(r.flavorProfile)) score += 4;
+          return { item: r, score };
+        }).sort((a, b) => b.score - a.score)[0]?.item;
+
+        if (bestCanh) document.getElementById('slot-select-canh').value = bestCanh.id;
+        if (bestRau) document.getElementById('slot-select-rau').value = bestRau.id;
+      } else {
+        if (suggested.man) document.getElementById('slot-select-man').value = suggested.man;
+        if (suggested.canh) document.getElementById('slot-select-canh').value = suggested.canh;
+        if (suggested.rau) document.getElementById('slot-select-rau').value = suggested.rau;
+      }
+
+      evaluateCurrentTrayPairing();
+      showToast('Đã phối mâm cơm chuẩn vị Bắc!', '🌿');
+    }
+
+    function saveMealEditor() {
+      if (!currentEditingContext) return;
+      const { dayKey, mealType } = currentEditingContext;
+
+      if (mealType === 'sang') {
+        appState.weeklyPlan[dayKey].sang = document.getElementById('slot-select-sang').value || null;
+      } else {
+        appState.weeklyPlan[dayKey][mealType] = {
+          man: document.getElementById('slot-select-man').value || null,
+          canh: document.getElementById('slot-select-canh').value || null,
+          rau: document.getElementById('slot-select-rau').value || null
+        };
+      }
+
+      saveState();
+      renderPlannerView();
+      closeMealEditor();
+      showToast('Đã lưu mâm cơm vào lịch tuần!');
+    }
+
+    function clearCurrentMealSlot() {
+      if (!currentEditingContext) return;
+      const { dayKey, mealType } = currentEditingContext;
+      if (mealType === 'sang') {
+        appState.weeklyPlan[dayKey].sang = null;
+      } else {
+        appState.weeklyPlan[dayKey][mealType] = { man: null, canh: null, rau: null };
+      }
+      saveState();
+      renderPlannerView();
+      closeMealEditor();
+      showToast('Đã xóa món khỏi bữa ăn', '🗑️');
+    }
+
+    function copyCurrentMealToTarget() {
+      if (!currentEditingContext) return;
+      const targetVal = document.getElementById('copyTargetSelect').value;
+      if (!targetVal) return;
+      const [targetDay, targetMeal] = targetVal.split(':');
+
+      if (currentEditingContext.mealType === 'sang') {
+        const val = document.getElementById('slot-select-sang').value || null;
+        appState.weeklyPlan[targetDay].sang = val;
+      } else {
+        appState.weeklyPlan[targetDay][targetMeal] = {
+          man: document.getElementById('slot-select-man').value || null,
+          canh: document.getElementById('slot-select-canh').value || null,
+          rau: document.getElementById('slot-select-rau').value || null
+        };
+      }
+
+      saveState();
+      renderPlannerView();
+      const targetDayLabel = DAYS_OF_WEEK.find(d => d.key === targetDay)?.label || '';
+      showToast(`Đã sao chép sang ${targetDayLabel}!`, '📋');
+    }
+
+    function closeMealEditor() {
+      document.getElementById('mealEditorModal').classList.add('hidden');
+      currentEditingContext = null;
+    }
+
+    // =========================================================================
+    // 7. RECIPE DATABASE VIEW & DETAIL MODAL
+    // =========================================================================
+    function setRecipeCategoryFilter(cat) {
+      appState.recipeCategoryFilter = cat;
+      document.querySelectorAll('.cat-filter-btn').forEach(btn => {
+        btn.className = 'cat-filter-btn px-3.5 py-1.5 rounded-xl text-xs font-medium bg-cream-100 text-ink-600 hover:bg-cream-200 transition';
+      });
+      const activeBtn = document.getElementById(`cat-filter-${cat}`);
+      if (activeBtn) {
+        activeBtn.className = 'cat-filter-btn px-3.5 py-1.5 rounded-xl text-xs font-semibold bg-ink-800 text-white transition';
+      }
+      renderRecipesView();
+    }
+
+    function renderRecipesView() {
+      const query = (document.getElementById('recipeSearchInput').value || '').toLowerCase().trim();
+      const proteinFilter = document.getElementById('recipeProteinFilter').value;
+      const catFilter = appState.recipeCategoryFilter;
+
+      const filtered = getAllRecipes().filter(r => {
+        if (catFilter !== 'all' && r.category !== catFilter) return false;
+        if (proteinFilter !== 'all' && r.protein !== proteinFilter) return false;
+        if (query) {
+          const inName = r.name.toLowerCase().includes(query);
+          const inIng = r.ingredients.some(i => i.name.toLowerCase().includes(query));
+          if (!inName && !inIng) return false;
+        }
+        return true;
+      });
+
+      const grid = document.getElementById('recipesGrid');
+      if (filtered.length === 0) {
+        grid.innerHTML = `
+          <div class="col-span-full bg-white rounded-2xl p-8 text-center border border-cream-200">
+            <p class="text-ink-600 text-sm">Không tìm thấy món ăn nào phù hợp với bộ lọc hiện tại.</p>
+          </div>
+        `;
+        return;
+      }
+
+      grid.innerHTML = filtered.map(r => {
+        const cat = CATEGORY_META[r.category] || CATEGORY_META.man;
+        const isCustom = r.id.startsWith('custom_');
+        return `
+          <div onclick="openRecipeDetail('${r.id}')" class="tray-card cursor-pointer bg-white rounded-2xl p-4 border border-cream-200 flex flex-col justify-between gap-3">
+            <div>
+              <div class="flex items-center justify-between gap-2 mb-2">
+                <span class="px-2.5 py-0.5 rounded-lg text-[11px] font-bold ${cat.badgeClass}">${cat.icon} ${cat.label}</span>
+                <span class="text-xs text-ink-600 font-medium">⏱️ ${r.prepTime} phút</span>
+              </div>
+              <h3 class="font-serif text-base sm:text-lg font-bold text-ink-800 leading-snug mb-1.5">${r.name}</h3>
+              <p class="text-xs text-ink-600 line-clamp-2">
+                Nguyên liệu: ${r.ingredients.slice(0, 4).map(i => i.name).join(', ')}${r.ingredients.length > 4 ? '...' : ''}
+              </p>
+            </div>
+
+            <div class="pt-2.5 border-t border-cream-100 flex items-center justify-between text-[11px]">
+              <span class="text-ink-600 font-medium">${PROTEIN_LABELS[r.protein]} • ${FLAVOR_LABELS[r.flavorProfile]}</span>
+              ${isCustom ? '<span class="px-2 py-0.5 rounded bg-terracotta-50 text-terracotta-600 font-semibold">Món tự thêm</span>' : '<span class="text-bamboo-700 font-semibold">Xem công thức →</span>'}
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function openRecipeDetail(recipeId) {
+      const recipe = getRecipeById(recipeId);
+      if (!recipe) return;
+      currentDetailRecipeId = recipeId;
+
+      const cat = CATEGORY_META[recipe.category] || CATEGORY_META.man;
+      document.getElementById('detailBadges').innerHTML = `
+        <span class="px-2.5 py-0.5 rounded-lg text-xs font-bold ${cat.badgeClass}">${cat.icon} ${cat.label}</span>
+        <span class="px-2.5 py-0.5 rounded-lg text-xs font-medium bg-white text-ink-700 border border-cream-200">⏱️ ${recipe.prepTime} phút</span>
+        <span class="px-2.5 py-0.5 rounded-lg text-xs font-medium bg-white text-ink-700 border border-cream-200">${FLAVOR_LABELS[recipe.flavorProfile]}</span>
+      `;
+      document.getElementById('detailTitle').textContent = recipe.name;
+      document.getElementById('detailServingsBadge').textContent = `Định lượng cho ${appState.servings} người ăn`;
+
+      // Source link if present
+      const sourceBox = document.getElementById('detailSourceBox');
+      if (recipe.sourceUrl) {
+        sourceBox.classList.remove('hidden');
+        const link = document.getElementById('detailSourceLink');
+        link.href = recipe.sourceUrl;
+        link.textContent = recipe.sourceUrl;
+      } else {
+        sourceBox.classList.add('hidden');
+      }
+
+      // Scale ingredients by servings (base = 4)
+      const ratio = appState.servings / 4;
+      document.getElementById('detailIngredientsList').innerHTML = recipe.ingredients.map(ing => {
+        const scaledAmt = formatScaledAmount(ing.amount * ratio, ing.unit);
+        return `
+          <li class="flex items-center justify-between bg-cream-50 px-3 py-2 rounded-xl border border-cream-200/80 text-xs sm:text-sm">
+            <span class="text-ink-800 font-medium">${ing.name}</span>
+            <span class="font-bold text-terracotta-700 ml-2 shrink-0">${scaledAmt} ${ing.unit}</span>
+          </li>
+        `;
+      }).join('');
+
+      document.getElementById('detailInstructionsList').innerHTML = recipe.instructions.map((step, idx) => `
+        <li class="flex items-start gap-3 text-xs sm:text-sm text-ink-800 leading-relaxed bg-cream-50/60 p-3 rounded-xl border border-cream-200/60">
+          <span class="w-6 h-6 rounded-full bg-bamboo-600 text-white font-bold text-xs flex items-center justify-center shrink-0 mt-0.5">${idx + 1}</span>
+          <span>${step}</span>
+        </li>
+      `).join('');
+
+      const delBtn = document.getElementById('deleteCustomRecipeBtn');
+      if (recipe.id.startsWith('custom_')) {
+        delBtn.classList.remove('hidden');
+      } else {
+        delBtn.classList.add('hidden');
+      }
+
+      document.getElementById('recipeDetailModal').classList.remove('hidden');
+    }
+
+    function deleteCurrentCustomRecipe() {
+      if (!currentDetailRecipeId) return;
+      appState.customRecipes = appState.customRecipes.filter(r => r.id !== currentDetailRecipeId);
+      saveState();
+      closeRecipeDetail();
+      renderRecipesView();
+      showToast('Đã xóa món ăn tự thêm', '🗑️');
+    }
+
+    function closeRecipeDetail() {
+      document.getElementById('recipeDetailModal').classList.add('hidden');
+      currentDetailRecipeId = null;
+    }
+
+    // =========================================================================
+    // 8. SMART PASTE / URL VIETNAMESE RECIPE IMPORTER
+    // =========================================================================
+    function openImportModal() {
+      document.getElementById('importUrlInput').value = '';
+      document.getElementById('importRawText').value = '';
+      document.getElementById('newRecipeName').value = '';
+      document.getElementById('newRecipeCategory').value = 'man';
+      document.getElementById('newRecipeProtein').value = 'lon';
+      document.getElementById('newRecipeFlavor').value = 'dam_da';
+      document.getElementById('newRecipeTime').value = '30';
+      document.getElementById('newRecipeInstructions').value = '';
+
+      const ingContainer = document.getElementById('newIngredientsContainer');
+      ingContainer.innerHTML = '';
+      addIngredientRow();
+      addIngredientRow();
+
+      document.getElementById('importRecipeModal').classList.remove('hidden');
+    }
+
+    function closeImportModal() {
+      document.getElementById('importRecipeModal').classList.add('hidden');
+    }
+
+    function addIngredientRow(name = '', amount = '', unit = 'g', marketGroup = 'rau_cu') {
+      const container = document.getElementById('newIngredientsContainer');
+      const row = document.createElement('div');
+      row.className = 'ing-row grid grid-cols-12 gap-1.5 items-center';
+      row.innerHTML = `
+        <input type="text" placeholder="Tên nguyên liệu" value="${name}" class="ing-name col-span-5 px-2.5 py-1.5 rounded-lg bg-cream-50 border border-cream-200 text-xs">
+        <input type="number" step="any" placeholder="SL" value="${amount}" class="ing-amt col-span-2 px-2 py-1.5 rounded-lg bg-cream-50 border border-cream-200 text-xs">
+        <input type="text" placeholder="Đơn vị" value="${unit}" class="ing-unit col-span-2 px-2 py-1.5 rounded-lg bg-cream-50 border border-cream-200 text-xs">
+        <select class="ing-group col-span-2 px-1.5 py-1.5 rounded-lg bg-cream-50 border border-cream-200 text-[11px]">
+          <option value="thit_haisan" ${marketGroup === 'thit_haisan' ? 'selected' : ''}>Thịt/Cá</option>
+          <option value="rau_cu" ${marketGroup === 'rau_cu' ? 'selected' : ''}>Rau củ</option>
+          <option value="trung_dau" ${marketGroup === 'trung_dau' ? 'selected' : ''}>Trứng/Đậu</option>
+          <option value="gia_vi" ${marketGroup === 'gia_vi' ? 'selected' : ''}>Gia vị/Khô</option>
+        </select>
+        <button type="button" onclick="this.parentElement.remove()" class="col-span-1 text-center text-ink-400 hover:text-red-600 text-xs font-bold">✕</button>
+      `;
+      container.appendChild(row);
+    }
+
+    function classifyMarketGroup(ingName) {
+      const lower = ingName.toLowerCase();
+      if (/thịt|ba chỉ|sườn|gà|vịt|bò|cá|tôm|cua|ngao|mực|lươn|giò|chả|xương/.test(lower)) return 'thit_haisan';
+      if (/trứng|đậu phụ|đậu hũ|sữa|bơ/.test(lower)) return 'trung_dau';
+      if (/mắm|muối|đường|tiêu|dầu|giấm|hạt nêm|bột|gạo|miến|bánh đa|mộc nhĩ|nấm hương|lạc/.test(lower)) return 'gia_vi';
+      return 'rau_cu';
+    }
+
+    function fillSampleWebPaste() {
+      document.getElementById('importUrlInput').value = 'https://cookpad.com/vn/cong-thuc/ca-bong-kho-tieu-bac-bo';
+      document.getElementById('importRawText').value = `Cá bống kho tiêu chuẩn vị Bắc
+Nguyên liệu:
+- 400g cá bống sông làm sạch
+- 100g thịt ba chỉ thái miếng nhỏ
+- 2 thìa nước mắm ngon
+- 1 thìa đường thắng nước hàng
+- 30g hành khô và ớt tươi
+- 1 thìa hạt tiêu xay
+Cách làm:
+1. Ướp cá bống với hành khô băm, nước mắm, nước hàng và chút tiêu trong 20 phút cho săn thịt.
+2. Áp chảo sơ thịt ba chỉ cho ra bớt mỡ, xếp cá bống lên trên rồi đổ nước sôi xăm xắp mặt cá.
+3. Kho lửa liu riu khoảng 25 phút đến khi nước kho sánh quyện, rắc thêm hạt tiêu xay.`;
+      parsePastedRecipeText();
+    }
+
+    function parsePastedRecipeText() {
+      const raw = document.getElementById('importRawText').value.trim();
+      if (!raw) {
+        showToast('Vui lòng dán nội dung công thức vào ô văn bản trước!', '⚠️');
+        return;
+      }
+
+      const lines = raw.split('\n').map(l => l.trim()).filter(Boolean);
+      if (lines.length > 0 && !document.getElementById('newRecipeName').value) {
+        const firstLine = lines[0].replace(/^[-*•\d.)]+\s*/, '');
+        if (firstLine.length < 70 && !/nguyên liệu/i.test(firstLine)) {
+          document.getElementById('newRecipeName').value = firstLine;
+        }
+      }
+
+      const parsedIngredients = [];
+      const parsedSteps = [];
+      let section = 'ingredients';
+
+      lines.forEach((line, idx) => {
+        if (/^nguyên liệu/i.test(line)) { section = 'ingredients'; return; }
+        if (/^(cách làm|thực hiện|các bước|hướng dẫn)/i.test(line)) { section = 'steps'; return; }
+
+        if (section === 'steps' || /^bước\s*\d+/i.test(line)) {
+          section = 'steps';
+          parsedSteps.push(line.replace(/^(bước\s*\d+[:.]?\s*|\d+[.)]\s*)/i, ''));
+          return;
+        }
+
+        // Skip title line
+        if (idx === 0 && line === document.getElementById('newRecipeName').value) return;
+
+        // Try matching Vietnamese quantity + unit + ingredient name: e.g. "300g thịt ba chỉ" or "2 quả cà chua"
+        const cleanLine = line.replace(/^[-*•+]\s*/, '');
+        const match = cleanLine.match(/^(\d+(?:[.,]\d+)?)\s*(kg|g|gr|gam|ml|lít|quả|trái|củ|mớ|bó|bìa|thìa|muỗng|gói|tập|lá|cái|con)?\s+(.+)$/i);
+        if (match) {
+          let amt = parseFloat(match[1].replace(',', '.'));
+          let unit = (match[2] || 'phần').toLowerCase();
+          if (unit === 'gr' || unit === 'gam') unit = 'g';
+          if (unit === 'kg') { amt = amt * 1000; unit = 'g'; }
+          const name = match[3].trim();
+          parsedIngredients.push({
+            name: name.charAt(0).toUpperCase() + name.slice(1),
+            amount: amt,
+            unit,
+            marketGroup: classifyMarketGroup(name)
+          });
+        } else if (cleanLine.length < 60 && !cleanLine.endsWith('.')) {
+          parsedIngredients.push({
+            name: cleanLine.charAt(0).toUpperCase() + cleanLine.slice(1),
+            amount: 1,
+            unit: 'phần',
+            marketGroup: classifyMarketGroup(cleanLine)
+          });
+        } else {
+          parsedSteps.push(cleanLine);
+        }
+      });
+
+      if (parsedIngredients.length > 0) {
+        const container = document.getElementById('newIngredientsContainer');
+        container.innerHTML = '';
+        parsedIngredients.forEach(ing => addIngredientRow(ing.name, ing.amount, ing.unit, ing.marketGroup));
+      }
+
+      if (parsedSteps.length > 0) {
+        document.getElementById('newRecipeInstructions').value = parsedSteps.join('\n');
+      }
+
+      // Guess protein from first meat/fish ingredient
+      const mainIng = parsedIngredients.find(i => i.marketGroup === 'thit_haisan' || i.marketGroup === 'trung_dau');
+      if (mainIng) {
+        const n = mainIng.name.toLowerCase();
+        if (/gà|vịt/.test(n)) document.getElementById('newRecipeProtein').value = 'ga';
+        else if (/bò/.test(n)) document.getElementById('newRecipeProtein').value = 'bo';
+        else if (/cá|tôm|cua|ngao|mực|lươn/.test(n)) document.getElementById('newRecipeProtein').value = 'ca_haisan';
+        else if (/trứng|đậu/.test(n)) document.getElementById('newRecipeProtein').value = 'trung_dau';
+        else document.getElementById('newRecipeProtein').value = 'lon';
+      }
+
+      showToast(`Đã tách được ${parsedIngredients.length} nguyên liệu & ${parsedSteps.length} bước làm!`, '⚡');
+    }
+
+    function saveNewRecipe() {
+      const name = document.getElementById('newRecipeName').value.trim();
+      if (!name) {
+        showToast('Vui lòng nhập tên món ăn!', '⚠️');
+        return;
+      }
+
+      const ingredients = [];
+      document.querySelectorAll('#newIngredientsContainer .ing-row').forEach(row => {
+        const ingName = row.querySelector('.ing-name').value.trim();
+        const amt = parseFloat(row.querySelector('.ing-amt').value) || 1;
+        const unit = row.querySelector('.ing-unit').value.trim() || 'phần';
+        const marketGroup = row.querySelector('.ing-group').value;
+        if (ingName) {
+          ingredients.push({ name: ingName, amount: amt, unit, marketGroup });
+        }
+      });
+
+      if (ingredients.length === 0) {
+        showToast('Vui lòng thêm ít nhất 1 nguyên liệu!', '⚠️');
+        return;
+      }
+
+      const rawSteps = document.getElementById('newRecipeInstructions').value.trim();
+      const instructions = rawSteps
+        ? rawSteps.split('\n').map(s => s.trim()).filter(Boolean)
+        : ['Sơ chế sạch các nguyên liệu đã chuẩn bị.', 'Chế biến và nêm nếm gia vị vừa ăn theo khẩu vị gia đình.'];
+
+      const newDish = {
+        id: 'custom_' + Date.now(),
+        name,
+        category: document.getElementById('newRecipeCategory').value,
+        protein: document.getElementById('newRecipeProtein').value,
+        flavorProfile: document.getElementById('newRecipeFlavor').value,
+        prepTime: parseInt(document.getElementById('newRecipeTime').value, 10) || 30,
+        sourceUrl: document.getElementById('importUrlInput').value.trim() || null,
+        ingredients,
+        instructions
+      };
+
+      appState.customRecipes.unshift(newDish);
+      saveState();
+      closeImportModal();
+      renderRecipesView();
+      showToast(`Đã thêm "${name}" vào Kho Món Bắc!`, '🍲');
+    }
+
+    // =========================================================================
+    // 9. AUTOMATED MARKET GROCERY LIST GENERATOR
+    // =========================================================================
+    function formatScaledAmount(val, unit) {
+      if (unit === 'g' && val >= 1000) {
+        return `${Number((val / 1000).toFixed(2))} kg`;
+      }
+      if (unit === 'ml' && val >= 1000) {
+        return `${Number((val / 1000).toFixed(2))} lít`;
+      }
+      const rounded = Math.round(val * 10) / 10;
+      return `${rounded}`;
+    }
+
+    function formatDisplayQuantity(val, unit) {
+      if (unit === 'g' && val >= 1000) {
+        return `${Number((val / 1000).toFixed(2))} kg`;
+      }
+      if (unit === 'ml' && val >= 1000) {
+        return `${Number((val / 1000).toFixed(2))} lít`;
+      }
+      const rounded = Math.round(val * 10) / 10;
+      return `${rounded} ${unit}`;
+    }
+
+    function isPantryStaple(name) {
+      const lower = name.toLowerCase();
+      return PANTRY_STAPLE_KEYWORDS.some(kw => lower.includes(kw));
+    }
+
+    function aggregateGroceries() {
+      const range = document.getElementById('groceryRangeSelect')?.value || 'all';
+      let targetDays = DAYS_OF_WEEK.map(d => d.key);
+      if (range === 'first_half') targetDays = ['mon', 'tue', 'wed'];
+      if (range === 'second_half') targetDays = ['thu', 'fri', 'sat', 'sun'];
+
+      const ratio = appState.servings / 4;
+      const map = new Map();
+
+      targetDays.forEach(dayKey => {
+        const dayPlan = appState.weeklyPlan[dayKey];
+        if (!dayPlan) return;
+
+        const dishIds = [
+          dayPlan.sang,
+          dayPlan.trua?.man,
+          dayPlan.trua?.canh,
+          dayPlan.trua?.rau,
+          dayPlan.toi?.man,
+          dayPlan.toi?.canh,
+          dayPlan.toi?.rau
+        ].filter(Boolean);
+
+        dishIds.forEach(id => {
+          const dish = getRecipeById(id);
+          if (!dish) return;
+          dish.ingredients.forEach(ing => {
+            const normName = ing.name.trim();
+            const normUnit = ing.unit.trim().toLowerCase();
+            const key = `${normName.toLowerCase()}__${normUnit}`;
+            const scaledAmt = ing.amount * ratio;
+
+            if (map.has(key)) {
+              const existing = map.get(key);
+              existing.totalAmount += scaledAmt;
+              existing.dishes.add(dish.name);
+            } else {
+              map.set(key, {
+                key,
+                name: normName,
+                totalAmount: scaledAmt,
+                unit: ing.unit,
+                marketGroup: ing.marketGroup || classifyMarketGroup(normName),
+                dishes: new Set([dish.name])
+              });
+            }
+          });
+        });
+      });
+
+      return Array.from(map.values());
+    }
+
+    function renderGroceryView() {
+      const hideStaples = document.getElementById('hidePantryStaples')?.checked || false;
+      let items = aggregateGroceries();
+      if (hideStaples) {
+        items = items.filter(i => !isPantryStaple(i.name));
+      }
+
+      const container = document.getElementById('groceryStallsGrid');
+      if (items.length === 0) {
+        container.innerHTML = `
+          <div class="col-span-full bg-white rounded-2xl p-8 text-center border border-cream-200 space-y-2">
+            <div class="text-3xl">🧺</div>
+            <h3 class="font-serif font-bold text-lg text-ink-800">Chưa có nguyên liệu nào cần mua</h3>
+            <p class="text-xs sm:text-sm text-ink-600">Hãy chọn món ăn trong tab <strong>Thực Đơn Tuần</strong> để hệ thống tự động tổng hợp danh sách đi chợ.</p>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = MARKET_STALLS.map(stall => {
+        const stallItems = items.filter(i => i.marketGroup === stall.key);
+        if (stallItems.length === 0) return '';
+
+        // Sort unchecked first, checked at bottom
+        stallItems.sort((a, b) => {
+          const aChecked = !!appState.checkedGroceries[a.key];
+          const bChecked = !!appState.checkedGroceries[b.key];
+          return Number(aChecked) - Number(bChecked);
+        });
+
+        return `
+          <div class="bg-white rounded-2xl border border-cream-200 shadow-xs overflow-hidden flex flex-col">
+            <div class="px-4 py-3 border-b flex items-center justify-between ${stall.headerClass}">
+              <div class="flex items-center gap-2 font-bold text-sm">
+                <span class="text-base">${stall.icon}</span>
+                <span>${stall.title}</span>
+              </div>
+              <span class="text-xs font-semibold px-2 py-0.5 rounded-full bg-white/80">${stallItems.length} món</span>
+            </div>
+
+            <ul class="divide-y divide-cream-100 p-2">
+              ${stallItems.map(item => {
+                const isChecked = !!appState.checkedGroceries[item.key];
+                const qtyStr = formatDisplayQuantity(item.totalAmount, item.unit);
+                const dishListStr = Array.from(item.dishes).slice(0, 2).join(', ') + (item.dishes.size > 2 ? ` +${item.dishes.size - 2}` : '');
+
+                return `
+                  <li onclick="toggleGroceryCheck('${item.key.replace(/'/g, "\\'")}')" class="cursor-pointer flex items-center justify-between gap-3 p-2.5 rounded-xl hover:bg-cream-50 transition select-none">
+                    <div class="flex items-start gap-3">
+                      <input type="checkbox" ${isChecked ? 'checked' : ''} onclick="event.stopPropagation(); toggleGroceryCheck('${item.key.replace(/'/g, "\\'")}')" class="mt-1 w-4 h-4 rounded text-bamboo-600 focus:ring-bamboo-600 cursor-pointer">
+                      <div>
+                        <div class="text-xs sm:text-sm font-semibold ${isChecked ? 'line-through text-ink-400' : 'text-ink-800'}">${item.name}</div>
+                        <div class="text-[11px] text-ink-400">Dùng cho: ${dishListStr}</div>
+                      </div>
+                    </div>
+                    <span class="shrink-0 text-xs font-bold px-2.5 py-1 rounded-lg ${isChecked ? 'bg-cream-100 text-ink-400' : 'bg-terracotta-50 text-terracotta-700'}">
+                      ${qtyStr}
+                    </span>
+                  </li>
+                `;
+              }).join('')}
+            </ul>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function toggleGroceryCheck(itemKey) {
+      if (appState.checkedGroceries[itemKey]) {
+        delete appState.checkedGroceries[itemKey];
+      } else {
+        appState.checkedGroceries[itemKey] = true;
+      }
+      saveState();
+      renderGroceryView();
+    }
+
+    function resetCheckedGroceries() {
+      appState.checkedGroceries = {};
+      saveState();
+      renderGroceryView();
+      showToast('Đã bỏ đánh dấu toàn bộ danh sách đi chợ');
+    }
+
+    function copyGroceryToClipboard() {
+      const hideStaples = document.getElementById('hidePantryStaples')?.checked || false;
+      let items = aggregateGroceries().filter(i => !appState.checkedGroceries[i.key]);
+      if (hideStaples) items = items.filter(i => !isPantryStaple(i.name));
+
+      if (items.length === 0) {
+        showToast('Không còn món nào chưa mua để sao chép!', 'ℹ️');
+        return;
+      }
+
+      const rangeText = document.getElementById('groceryRangeSelect').selectedOptions[0].text;
+      const lines = [`🛒 DANH SÁCH ĐI CHỢ (${rangeText} • ${appState.servings} người ăn):`, ''];
+
+      MARKET_STALLS.forEach(stall => {
+        const stallItems = items.filter(i => i.marketGroup === stall.key);
+        if (stallItems.length > 0) {
+          lines.push(`${stall.icon} ${stall.title.toUpperCase()}:`);
+          stallItems.forEach(item => {
+            lines.push(`- ${item.name}: ${formatDisplayQuantity(item.totalAmount, item.unit)}`);
+          });
+          lines.push('');
+        }
+      });
+
+      const finalText = lines.join('\n').trim();
+      const textarea = document.createElement('textarea');
+      textarea.value = finalText;
+      document.body.appendChild(textarea);
+      textarea.select();
+      try {
+        document.execCommand('copy');
+        showToast('Đã sao chép danh sách đi chợ! Sẵn sàng dán vào Zalo.', '📋');
+      } catch (err) {
+        showToast('Không thể sao chép tự động trên trình duyệt này.', '⚠️');
+      }
+      document.body.removeChild(textarea);
+    }
+
+    // =========================================================================
+    // 10. BACKUP & RESTORE (.JSON)
+    // =========================================================================
+    function openBackupModal() {
+      document.getElementById('backupModal').classList.remove('hidden');
+    }
+
+    function closeBackupModal() {
+      document.getElementById('backupModal').classList.add('hidden');
+    }
+
+    function exportBackupJSON() {
+      const payload = {
+        app: 'ComNhaBacBo',
+        exportedAt: new Date().toISOString(),
+        data: {
+          servings: appState.servings,
+          customRecipes: appState.customRecipes,
+          weeklyPlan: appState.weeklyPlan,
+          checkedGroceries: appState.checkedGroceries
+        }
+      };
+      const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `thuc-don-com-nha-${new Date().toISOString().slice(0, 10)}.json`;
+      a.click();
+      URL.revokeObjectURL(url);
+      showToast('Đã tải về file sao lưu .JSON!', '💾');
+    }
+
+    function importBackupJSON(event) {
+      const file = event.target.files?.[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        try {
+          const parsed = JSON.parse(e.target.result);
+          const data = parsed.data || parsed;
+          if (!data.weeklyPlan) throw new Error('File không hợp lệ');
+          appState.servings = data.servings || 4;
+          appState.customRecipes = Array.isArray(data.customRecipes) ? data.customRecipes : [];
+          appState.weeklyPlan = data.weeklyPlan;
+          appState.checkedGroceries = data.checkedGroceries || {};
+          saveState();
+          document.getElementById('servingsSelect').value = String(appState.servings);
+          closeBackupModal();
+          switchTab(appState.activeTab);
+          showToast('Khôi phục dữ liệu thành công!', '✅');
+        } catch (err) {
+          showToast('File sao lưu không đúng định dạng!', '❌');
+        }
+      };
+      reader.readAsText(file);
+      event.target.value = '';
+    }
+
+    function factoryResetApp() {
+      localStorage.removeItem(STORAGE_KEY);
+      appState.customRecipes = [];
+      appState.checkedGroceries = {};
+      appState.servings = 4;
+      loadState();
+      closeBackupModal();
+      switchTab('planner');
+      showToast('Đã khôi phục dữ liệu mặc định ban đầu!', '🔄');
+    }
+
+    // Boot application
+    window.addEventListener('DOMContentLoaded', () => {
+      loadState();
+      updateBadges();
+      renderPlannerView();
+    });
+  </script>
+</body>
+</html>
